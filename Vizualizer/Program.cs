@@ -10,7 +10,6 @@ namespace Vizualizer
 {
     class Program
     {
-
         static void Main(string[] args)
         {
             int width = 20;
@@ -18,15 +17,7 @@ namespace Vizualizer
             Console.WriteLine("Generate terrain");
 
             //Generate fake picture
-            Random rand = new Random();
-            double[,] matrix = new double[width, height];
-            for (int i = 0; i < width; i++)
-            {
-                for (int j = 0; j < height; j++)
-                {
-                    matrix[i, j] = rand.NextDouble();
-                }
-            }
+            double[,] matrix = Source.CreatePictureFromMysteryEquation(width, height);
 
             Console.WriteLine("Begin render");
 
@@ -38,8 +29,9 @@ namespace Vizualizer
                 {
                     for (int y = 0; y < height; y++)
                     {
-                        int value = (int)(matrix[x, y] * 255);
-                        if (value > 255) value = 255;
+                        double matrixvalue = Math.Abs(matrix[x, y]);
+
+                        int value = (matrixvalue > 1) ? 255 : (int)(matrixvalue * 255);
                         Color newColor = Color.FromArgb(value, value, value);
                         bmp.SetPixel(x, y, newColor);
                     }
