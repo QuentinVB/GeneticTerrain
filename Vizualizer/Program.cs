@@ -5,11 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing.Imaging;
+using Ast;
 
 namespace Vizualizer
 {
     class Program
     {
+        private static MutationVisitor mutationVisitor;
+
         static void Main(string[] args)
         {
             int width = 20;

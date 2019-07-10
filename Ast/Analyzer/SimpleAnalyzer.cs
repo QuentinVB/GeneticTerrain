@@ -1,4 +1,3 @@
-using ITI.Tokenizer;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,7 +6,6 @@ namespace Ast
 {
     public class SimpleAnalyzer
     {
-
         public Node Parse( string expression )
         {
             var t = new StringTokenizer( expression );

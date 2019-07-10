@@ -8,7 +8,6 @@ namespace Ast
         static void Main(string[] args)
         {
             //AstTree.AstTrees();
-            MutationVisitor;
         }
     }
 }
