@@ -13,33 +13,28 @@ namespace Tests
         {
 
             //arrange
-            /*
-            var sut = new BestKeeper<Algorithm>(8,
-               () => {
-                    job.Student = student;
-                    job.StudentId = student.Id;
-                    return job;
-                }
-               
+            var sut = new BestKeeper<Algorithm>(8);
+            var fakeNode = new Node();
+            Algorithm sut1 = new Algorithm(fakeNode, 25);
 
-            ));
-             
+
             //act and assert
             sut.Count.Should().Be(0);
 
-            sut.Add(3);
+            sut.Add(sut1);
 
             sut.Count.Should().Be(1);
-            */
         }
         [Test]
         public void BestKeeper_add_and_popMax()
         {
             //arrange
-            var sut = new Heap<int>();
+            var sut = new BestKeeper<Algorithm>(8);
+            var fakeNode = new Node();
+            Algorithm sut1 = new Algorithm(fakeNode, 25);
 
             //act and assert
-
+            /*
             sut.Add(3);
             sut.Count.Should().Be(1);
 
@@ -48,7 +43,7 @@ namespace Tests
 
             sut.RemoveMax().Should().Be(8);
             sut.Count.Should().Be(1);
-
+            */
         }
         [Test]
         public void heap_add_and_clear()
