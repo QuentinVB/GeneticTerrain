@@ -8,5 +8,18 @@ namespace Ast
 {
     class AstWrapper
     {
-    }
+
+        private SimpleAnalyzer simpleAnalyzer;
+
+        public AstWrapper()
+        {
+           simpleAnalyzer = new SimpleAnalyzer();
+        }
+        public Node Parse(string expression)
+        {
+
+            return simpleAnalyzer.Parse(expression);
+        }
+
+     }
 }
