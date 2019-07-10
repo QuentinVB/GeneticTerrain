@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace GeneticTerrain
 {
     public class GeneticTerrain
@@ -13,17 +14,49 @@ namespace GeneticTerrain
         double acceptanceRatio;
 
         List<Algorithm> population;
-        Heap<Algorithm> bestKeeper;
+
+        //Heap<Algorithm> incubator;
 
         /*
-        max : n loop
-        if : 99%  or nth loop : stop
-        */
+    max : n loop
+    if : 99%  or nth loop : stop
+    */
+
+
+        private List<(Algorithm, Algorithm)> Meetic(List<Algorithm> p)
+        {
+            var AlgorithmCouples = new List<(Algorithm, Algorithm)>();
+            var random = new Random();
+            foreach (var elmt in p)
+            {
+                for (int i = 0; i <= p.Count; i++)
+                {
+                    int index = random.Next(p.Count);
+                    AlgorithmCouples.Add((elmt, p[index]));
+                }
+            }
+            return AlgorithmCouples;
+        }
         public GeneticTerrain(int maxPopulation, int maxGeneration, double acceptanceRatio)
         {
             this.maxPopulation = maxPopulation;
             this.maxGeneration = maxGeneration;
             this.acceptanceRatio = acceptanceRatio;
+        }
+
+        private List<(Algorithm, Algorithm)> Meetic(List<Algorithm> p)
+        {
+            var AlgorithmCouples = new List<(Algorithm, Algorithm)>();
+            var random = new Random();
+            foreach (var elmt in p)
+            {
+                for (int i = 0; i <= p.Count; i++)
+                {
+                    int index = random.Next(p.Count);
+                    AlgorithmCouples.Add((elmt, p[index]));
+                }
+            }
+            return AlgorithmCouples;
         }
 
         public void runSimulation()
@@ -45,6 +78,8 @@ namespace GeneticTerrain
                 Delta close to 0
                 incubator heap : taille logarithmique
 
+               
+
                  */
                 // Meetic : no asct
                 /* who fuck who ?
@@ -52,10 +87,10 @@ namespace GeneticTerrain
                  * loop until back to normal population
                  */
 
-                // Breeding : Shuffle genome between A and B : breeding strategy
+                // Shuffle genome between A and B
                 /* choose a method randomly => creationnnnn
-                 * 1 : choose a leaf from A randomly and substitute it with the tree from B
-                 * 2 : average
+                 * 1 :  choose a leaf from A randomly and substitute it with the tree from B
+                 * 2 : 
                  */
 
                 //Mutation : 
@@ -66,8 +101,6 @@ namespace GeneticTerrain
                  * then fill the leaf with a constant node OR a identifier
                  * the constant node will be a random number
                  */
-
-                 //optimization + node number
 
                 //DO IT AGAIN :)
 
