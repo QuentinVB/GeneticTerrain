@@ -6,13 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing.Imaging;
 using Ast;
+using System.IO;
 
 namespace Vizualizer
 {
     class Program
     {
-        private static MutationVisitor mutationVisitor;
-
         static void Main(string[] args)
         {
             int width = 20;
@@ -40,7 +39,8 @@ namespace Vizualizer
                     }
                 }
                 //save
-
+                
+                Directory.CreateDirectory(Path.GetDirectoryName(Directory.GetCurrentDirectory()+ "\\output\\"));
                 bmp.Save($".\\output\\{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}.png", ImageFormat.Png);
             }
             catch (Exception)
