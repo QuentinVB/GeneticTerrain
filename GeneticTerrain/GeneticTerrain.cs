@@ -13,10 +13,9 @@ namespace GeneticTerrain
         double acceptanceRatio;
 
         List<Algorithm> population;
+        Heap<Algorithm> bestKeeper;
 
-        //Heap<Algorithm> incubator;
-
-            /*
+        /*
         max : n loop
         if : 99%  or nth loop : stop
         */

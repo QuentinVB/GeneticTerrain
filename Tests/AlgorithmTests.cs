@@ -34,5 +34,19 @@ namespace Tests
             //assert
             sut1.CompareTo(sut2).Should().Be(compare);
         }
+        [Test]
+        [TestCase(50,10)]
+        [TestCase(80, 50)]
+        [TestCase(80, 70)]
+        public void toStringAlgorithm(int delta, int nodeCount)
+        {
+            //arrange
+            Algorithm sut1 = new Algorithm(new Node(), delta);
+            sut1.NodeCount = nodeCount;
+            //act
+
+            //assert
+            sut1.ToString().Should().Be($"Algorithm,Delta:{delta},NodeCount:{nodeCount},Tree:PRINTVISITOR");
+        }
     }
 }

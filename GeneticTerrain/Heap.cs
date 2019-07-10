@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace GeneticTerrain
 {
-    public class Heap<T>
+    public class Heap<T> : IEnumerable
         where T : IComparable<T>
     {
         T[] _items;
@@ -46,34 +48,74 @@ namespace GeneticTerrain
             }
             _items = newItems;
         }
-        //public T Peek();
+
+        public T Peek()
+        {
+            if (Count > 0)
+            {
+                return _items[0];
+            }
+            throw new InvalidOperationException();
+        }
+
         public T RemoveMax()
         {
             if (Count <= 0)
             {
                 throw new InvalidOperationException();
             }
-            _items[0] = _items[Count - 1];
+            T max = _items[0];
+            _items[0] = _items[_count - 1];
             _count--;
-
-            //now bubble up the childs
-            int idx = 0;
-            while (idx < Count
-                && (
-                    (_items[idx].CompareTo(_items[ChildLeft(idx)]) > 0)
-                    ||
-                    (_items[idx].CompareTo(_items[ChildRight(idx)]) > 0)
-                    )
-                )
+            int index = 0;
+            while (index < _count)
             {
-                int childIdx = (_items[idx].CompareTo(_items[ChildLeft(idx)]) > 0) ? ChildLeft(idx) : ChildRight(idx);
-
-                Swap(idx, childIdx);
-                idx = childIdx;
+                int left = (2 * index) + 1;
+                int right = (2 * index) + 2;
+                if (left >= _count)
+                {
+                    break;
+                }
+                     int maxChildIndex = IndexOfMaxChild(left, right);
+                if (_items[index].CompareTo(_items[maxChildIndex]) > 0)
+                {
+                    break;
+                }
+                Swap(index, maxChildIndex);
+                index = maxChildIndex;
             }
-
-            return default(T);
+            return max;
         }
+
+        private int IndexOfMaxChild(int left, int right)
+        {
+            int maxChildIndex = -1;
+            if (right >= _count)
+            {
+                maxChildIndex = left;
+            }
+            else
+            {
+                if (_items[left].CompareTo(_items[right]) > 0)
+                {
+                    maxChildIndex = left;
+                }
+                else
+                {
+                    maxChildIndex = right;
+                }
+            }
+            return maxChildIndex;
+        }
+
+
+        public int Count { get { return _count; } }
+
+        public IEnumerator<T> GetEnumerator() => _items.Take(_count).GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+
         private int ChildLeft(int index)
         {
             return 2 * index + 1;
@@ -83,9 +125,12 @@ namespace GeneticTerrain
             return 2 * index + 2;
         }
 
-        public int Count { get; }
 
-        //public void Clear();
+        public void Clear()
+        {
+            _count = 0;
+            _items = new T[DEFAULT_LENGTH];
+        }
 
         private int Parent(int index)
         {
@@ -97,5 +142,6 @@ namespace GeneticTerrain
             _items[left] = _items[right];
             _items[right] = temp;
         }
+
     }
 }
