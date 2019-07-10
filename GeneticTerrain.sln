@@ -3,7 +3,31 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.489
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneticTerrain", "GeneticTerrain\GeneticTerrain.csproj", "{577CDE0F-0515-4317-8300-982C0EB8C44D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vizualizer", "Vizualizer\Vizualizer.csproj", "{77E05BF5-62AB-4D6C-ABC4-49EC13D1CD85}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{E9A474AF-A15A-4E36-8F79-E856CDF79D76}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{577CDE0F-0515-4317-8300-982C0EB8C44D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{577CDE0F-0515-4317-8300-982C0EB8C44D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{577CDE0F-0515-4317-8300-982C0EB8C44D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{577CDE0F-0515-4317-8300-982C0EB8C44D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77E05BF5-62AB-4D6C-ABC4-49EC13D1CD85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77E05BF5-62AB-4D6C-ABC4-49EC13D1CD85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77E05BF5-62AB-4D6C-ABC4-49EC13D1CD85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77E05BF5-62AB-4D6C-ABC4-49EC13D1CD85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9A474AF-A15A-4E36-8F79-E856CDF79D76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9A474AF-A15A-4E36-8F79-E856CDF79D76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9A474AF-A15A-4E36-8F79-E856CDF79D76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9A474AF-A15A-4E36-8F79-E856CDF79D76}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
