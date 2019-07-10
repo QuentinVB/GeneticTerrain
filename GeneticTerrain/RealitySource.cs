@@ -8,7 +8,6 @@ namespace GeneticTerrain
 {
     public class RealitySource
     {
-
         /// <summary>
         /// Gets the z from mystery equation.
         /// </summary>
