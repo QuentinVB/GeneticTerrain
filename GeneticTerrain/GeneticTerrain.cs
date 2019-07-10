@@ -46,8 +46,6 @@ namespace GeneticTerrain
                 Delta close to 0
                 incubator heap : taille logarithmique
 
-               
-
                  */
                 // Meetic : no asct
                 /* who fuck who ?
@@ -55,10 +53,10 @@ namespace GeneticTerrain
                  * loop until back to normal population
                  */
 
-                // Shuffle genome between A and B
+                // Breeding : Shuffle genome between A and B : breeding strategy
                 /* choose a method randomly => creationnnnn
-                 * 1 :  choose a leaf from A randomly and substitute it with the tree from B
-                 * 2 : 
+                 * 1 : choose a leaf from A randomly and substitute it with the tree from B
+                 * 2 : average
                  */
 
                 //Mutation : 
@@ -69,6 +67,8 @@ namespace GeneticTerrain
                  * then fill the leaf with a constant node OR a identifier
                  * the constant node will be a random number
                  */
+
+                 //optimization + node number
 
                 //DO IT AGAIN :)
 
