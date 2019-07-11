@@ -15,6 +15,7 @@ namespace GeneticTerrain
         int maxGeneration;
         double startAcceptanceRatio;
         int gridSize;
+        double mutationChance;
 
 
         List<Algorithm> _population;
@@ -32,17 +33,20 @@ namespace GeneticTerrain
         /// <param name="maxGeneration">the maximum number of generation</param>
         /// <param name="startAcceptanceRatio">the first ratio for natural selection</param>
         /// <param name="gridSize">the size of the terrain</param>
-        public GeneticTerrainGenerator(int maxPopulation, int maxGeneration, double startAcceptanceRatio, int gridSize)
+        /// <param name="mutationChance">the mutation threshold</param>
+        public GeneticTerrainGenerator(int maxPopulation, int maxGeneration, double startAcceptanceRatio, int gridSize,double mutationChance)
         {
             if (maxPopulation <= 0) throw new ArgumentException("The max population must be higher than 0",nameof(maxPopulation));
             if (maxGeneration <= 0) throw new ArgumentException("Generations must be higher than 0",nameof(maxGeneration));
-            if (startAcceptanceRatio <= 0) throw new ArgumentException("Acceptance ratio must be higher than 0", nameof(maxGeneration));
-            if (gridSize <= 0) throw new ArgumentException("The grid size must be higher than 0", nameof(maxGeneration));
+            if (startAcceptanceRatio <= 0) throw new ArgumentException("Acceptance ratio must be higher than 0", nameof(startAcceptanceRatio));
+            if (gridSize <= 0) throw new ArgumentException("The grid size must be higher than 0", nameof(gridSize));
+            if (mutationChance <= 0) throw new ArgumentException("The mutation chance size must be higher than 0", nameof(mutationChance));
 
             this.maxPopulation = maxPopulation;
             this.maxGeneration = maxGeneration;
             this.startAcceptanceRatio = startAcceptanceRatio;
             this.gridSize = gridSize;
+            this.mutationChance = mutationChance;
 
             this._population = new List<Algorithm>();
             this._incubator = new BestKeeper<Algorithm>(1);
@@ -220,7 +224,8 @@ namespace GeneticTerrain
         {
             foreach (Algorithm candidate in population)
             {
-                _wrapper.MutateGraph(candidate.RootNode, mutationChance);
+                candidate.RootNode = _wrapper.MutateGraph(candidate.RootNode, mutationChance);
+                //log the mutations number ?
                 //then optimize and count node
             }
         }
@@ -244,31 +249,30 @@ namespace GeneticTerrain
 
             do
             {
+                //NaturalSelection
                 NaturalSelection(_population, generation);
                 _population.Clear();
 
+                //Making Couple
                 List<(Algorithm, Algorithm)> couples = Meetic(_incubator.ToList());
 
-
+                //Making Children
                 // Shuffle genome between A and B
                 /* choose a method randomly => creationnnnn
                  * 1 :  choose a leaf from A randomly and substitute it with the tree from B
                  * 2 : 
                  */
 
-                
-                double mutationChance = 0.2; // MAGIC NUMBER ITS BAD !
+                //Mutate the children
                 Mutation(_population, mutationChance);             
 
                 generation++;
-
             } while (generation < maxGeneration);
 
-            //evaluateAt last
+            //evaluateAt last ?
 
+            //give me the best one baby !
             return _incubator.RemoveMax();
-        }
-
-        
+        }       
     }
 }
