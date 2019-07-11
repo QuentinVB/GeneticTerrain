@@ -64,7 +64,7 @@ namespace GeneticTerrain
             while (idx > 0)
             {
                 int fatherIdx = (idx - 1) / 2;
-                if (_comparer.Compare(item, _items[fatherIdx]) > 0) break;
+                if (_comparer.Compare( _items[fatherIdx],item) > 0) break;
                 Swap(idx, fatherIdx);
                 idx = fatherIdx;
             }
@@ -94,11 +94,62 @@ namespace GeneticTerrain
             }
         }
 
+        public T RemoveMax()
+        {
+            if (Count <= 0)
+            {
+                throw new InvalidOperationException();
+            }
+            T max = _items[0];
+            _items[0] = _items[_count - 1];
+            _count--;
+            int index = 0;
+            while (index < _count)
+            {
+                int left = (2 * index) + 1;
+                int right = (2 * index) + 2;
+                if (left >= _count)
+                {
+                    break;
+                }
+                int maxChildIndex = IndexOfMaxChild(left, right);
+                if (_comparer.Compare(_items[index], _items[maxChildIndex]) > 0)
+                {
+                    break;
+                }
+                Swap(index, maxChildIndex);
+                index = maxChildIndex;
+            }
+            return max;
+        }
+
+        private int IndexOfMaxChild(int left, int right)
+        {
+            int maxChildIndex = -1;
+            if (right >= _count)
+            {
+                maxChildIndex = left;
+            }
+            else
+            {
+                if (_comparer.Compare(_items[left], _items[right]) > 0)
+                {
+                    maxChildIndex = left;
+                }
+                else
+                {
+                    maxChildIndex = right;
+                }
+            }
+            return maxChildIndex;
+        }
+
         void Swap(int idx1, int idx2)
         {
             T item = _items[idx1];
             _items[idx1] = _items[idx2];
             _items[idx2] = item;
         }
+        
     }
 }
