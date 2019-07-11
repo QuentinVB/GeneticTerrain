@@ -27,6 +27,8 @@ namespace GeneticTerrain
             this.maxPopulation = maxPopulation;
             this.maxGeneration = maxGeneration;
             this.startAcceptanceRatio = startAcceptanceRatio;
+            this.population = new List<Algorithm>();
+            this.incubator = new Heap<Algorithm>((int)Math.Ceiling(maxPopulation * startAcceptanceRatio));
         }
         /// <summary>
         /// evaluate each algorithm and sort them by delta in the incubator
@@ -47,16 +49,16 @@ namespace GeneticTerrain
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
-        public List<Couple> Meetic(List<Algorithm> p)
+        public List<(Algorithm,Algorithm)> Meetic(List<Algorithm> p)
         {  
-            var AlgorithmCouples = new List<Couple>();
+            var AlgorithmCouples = new List<(Algorithm, Algorithm)>();
             var random = new Random();
             foreach (var elmt in p)
             {
                 for (int i = 0; i <= p.Count; i++)
                 {
                     int index = random.Next(p.Count);
-                    AlgorithmCouples.Add(new Couple(elmt, p[index]));
+                    AlgorithmCouples.Add((elmt, p[index]));
                     if(AlgorithmCouples.Count==maxPopulation) return AlgorithmCouples;
                 }
             }
@@ -87,7 +89,7 @@ namespace GeneticTerrain
                
 
                 */
-                List<Couple> couples = Meetic(population);//incubator.ToList()
+                List<(Algorithm, Algorithm)> couples = Meetic(population);//incubator.ToList()
                 population.Clear();
 
                 // Shuffle genome between A and B

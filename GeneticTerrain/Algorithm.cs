@@ -28,10 +28,10 @@ namespace GeneticTerrain
             if (other == null) return 1;
 
             if (other is Algorithm otherAlgorithm)
-                return this._delta.CompareTo(otherAlgorithm._delta);
+                return -this._delta.CompareTo(otherAlgorithm._delta); // the best algorithm is the lower one
             else
                 throw new ArgumentException("Object is not an Algorithm");
-        }
+            }
         public override string ToString()
         {
             return $"Algorithm,Delta:{_delta},NodeCount:{_nodeCount},Tree:PRINTVISITOR";

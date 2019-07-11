@@ -1,20 +1,24 @@
 using NUnit.Framework;
 using FluentAssertions;
 using GeneticTerrain;
+using Ast;
 
 namespace Tests
 {
     public class AlgorithmTests
     {
+        Node fakeNode;
+
         [SetUp]
         public void Setup()
         {
+            fakeNode = new ConstantNode(2);
         }
         [Test]
         public void initializeAlgorithm()
         {
             //arrange
-            Algorithm sut = new Algorithm(new Node(), 0);
+            Algorithm sut = new Algorithm(fakeNode, 0);
             //act
 
             //assert
@@ -27,8 +31,8 @@ namespace Tests
         public void compareAlgorithm(int deltaA, int deltaB, int compare)
         {
             //arrange
-            Algorithm sut1 = new Algorithm(new Node(), deltaA);
-            Algorithm sut2 = new Algorithm(new Node(), deltaB);
+            Algorithm sut1 = new Algorithm(fakeNode, deltaA);
+            Algorithm sut2 = new Algorithm(fakeNode, deltaB);
             //act
 
             //assert
@@ -41,7 +45,7 @@ namespace Tests
         public void toStringAlgorithm(int delta, int nodeCount)
         {
             //arrange
-            Algorithm sut1 = new Algorithm(new Node(), delta);
+            Algorithm sut1 = new Algorithm(fakeNode, delta);
             sut1.NodeCount = nodeCount;
             //act
 

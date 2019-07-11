@@ -11,23 +11,29 @@ namespace GeneticTerrain
     {
         T[] _items;
         int _count;
-        const int DEFAULT_LENGTH = 100;
-        public Heap()
-        : this(DEFAULT_LENGTH)
-        {
-        }
         public Heap(int length)
         {
             _items = new T[length];
             _count = 0;
         }
-        public void Add(T value)
+
+        public bool Add(T candidate)
         {
-            //TODO: rescale if too small
-            if (_count >= _items.Length)
+            if (IsFull)
             {
-                GrowBackingArray();
+                if (candidate.CompareTo(_items[_count-1])<0 ) return false; //the delta is lower, go to hell !
+                _count--;
+                AddFromBottom(candidate);
+                return true;
             }
+
+            AddFromBottom(candidate);
+            return true;
+        }
+
+
+        private void AddFromBottom(T value)
+        {
             _items[_count] = value;
             int idx = _count;
 
@@ -115,6 +121,7 @@ namespace GeneticTerrain
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
+        bool IsFull => _count == _items.Length;
 
         private int ChildLeft(int index)
         {
@@ -123,13 +130,6 @@ namespace GeneticTerrain
         private int ChildRight(int index)
         {
             return 2 * index + 2;
-        }
-
-
-        public void Clear()
-        {
-            _count = 0;
-            _items = new T[DEFAULT_LENGTH];
         }
 
         private int Parent(int index)
