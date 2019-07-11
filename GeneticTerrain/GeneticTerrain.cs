@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ast;
 
 
 namespace GeneticTerrain
@@ -12,6 +13,8 @@ namespace GeneticTerrain
         int maxPopulation;
         int maxGeneration;
         double startAcceptanceRatio;
+        int gridSize;
+
 
         List<Algorithm> population;
         Heap<Algorithm> incubator;
@@ -19,26 +22,51 @@ namespace GeneticTerrain
         /// <summary>
         /// Allow to generate an algorithm that match the Reality
         /// </summary>
-        /// <param name="maxPopulation"></param>
-        /// <param name="maxGeneration"></param>
-        /// <param name="startAcceptanceRatio"></param>
-        public GeneticTerrain(int maxPopulation, int maxGeneration, double startAcceptanceRatio)
+        /// <param name="maxPopulation">the maximum population generated</param>
+        /// <param name="maxGeneration">the maximum number of generation</param>
+        /// <param name="startAcceptanceRatio">the first ratio for natural selection</param>
+        /// <param name="gridSize">the size of the terrain</param>
+        public GeneticTerrain(int maxPopulation, int maxGeneration, double startAcceptanceRatio, int gridSize)
         {
             this.maxPopulation = maxPopulation;
             this.maxGeneration = maxGeneration;
             this.startAcceptanceRatio = startAcceptanceRatio;
+            this.gridSize = gridSize;
+
             this.population = new List<Algorithm>();
             this.incubator = new Heap<Algorithm>((int)Math.Ceiling(maxPopulation * startAcceptanceRatio));
         }
+
         /// <summary>
         /// evaluate each algorithm and sort them by delta in the incubator
+        /// compute delta foreach case the average to produce the delta of the algorithm
+        /// Delta close to 0
+        /// incubator heap : taille logarithmique
         /// </summary>
-        /// <param name="population"></param>
-        /// <param name="startAcceptanceRatio"></param>
-        /// <param name="generation"></param>
+        /// <param name="population">The population.</param>
+        /// <param name="startAcceptanceRatio">The start acceptance ratio.</param>
+        /// <param name="generation">The generation.</param>
         private void NaturalSelection(List<Algorithm> population, double startAcceptanceRatio, int generation)
         {
-            throw new NotImplementedException();
+            /*
+            int incubatorSize = (int)Math.Ceiling(maxPopulation * startAcceptanceRatio) 
+            foreach (Algorithm candidate in population)
+            {
+                double deltaSum = 0;
+                //generate delta for matriw
+                for (int i = 0; i < gridSize; i++)
+                {
+                    for (int i = 0; i < gridSize; i++)
+                    {
+                        double x = (i - gridSize / 2) * 0.1;
+                        double y = -(j - gridSize / 2) * 0.1;
+                        //INSERT COMPUTE FROM WRAPPER HERE
+                        double value = AstWrapper.Compute(candidate.RootNode,)
+                    }
+                }
+               
+                candidate.Delta =
+            }*/
         }
 
 
@@ -80,15 +108,6 @@ namespace GeneticTerrain
             {
                 NaturalSelection(population, startAcceptanceRatio, generation);
 
-                //Evaluation
-                /*
-                compute delta foreach case the average to produce the delta of the algorithm 
-                Delta close to 0
-                incubator heap : taille logarithmique
-
-               
-
-                */
                 List<(Algorithm, Algorithm)> couples = Meetic(population);//incubator.ToList()
                 population.Clear();
 

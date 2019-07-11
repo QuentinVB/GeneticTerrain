@@ -22,6 +22,7 @@ namespace GeneticTerrain
 
         public int NodeCount { get => _nodeCount; set => _nodeCount = value; }
         public double Delta { get => _delta; set => _delta = value; }
+        public Node RootNode { get => _rootNode; set => _rootNode = value; }
 
         public int CompareTo(object other)
         {
