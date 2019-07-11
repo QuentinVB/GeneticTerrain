@@ -91,7 +91,7 @@ namespace Tests
         public void bestkeeper_with_limit()
         {
             //arrange
-            var sut = new Heap<Algorithm>(5);
+            var sut = new BestKeeper<Algorithm>(5);
 
             //act
             sut.Add(algo1);

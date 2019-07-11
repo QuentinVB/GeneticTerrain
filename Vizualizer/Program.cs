@@ -18,9 +18,13 @@ namespace Vizualizer
             int width = 20;
             int height = 20;
             Console.WriteLine("Generate terrain");
-           
+
             //Generate fake picture
-            double[,] matrix = Source.CreatePictureFromMysteryEquation(width, height);
+
+            //double[,] matrix = Source.CreatePictureFromMysteryEquation(width, height);
+            Console.WriteLine("Enter the terrain equation :");
+
+            double[,] matrix = Source.CreatePictureFromEquation(width, height,Console.ReadLine());
 
             Console.WriteLine("Begin render");
 
