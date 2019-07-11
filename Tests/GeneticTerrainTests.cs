@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Tests
 {
-    public class NaturalSelectionTest
+    public class GeneticTerrainTests
     {
         Node fakeNode;
         Node fakeNode2;
@@ -38,30 +38,19 @@ namespace Tests
 
         [Test]
         [TestCase(1,6,0.5)]
-        public void naturalselection_startup(int generation, int maxPopulation, double startAcceptanceRatio)
+        public void geneticTerrain_startup(int generation, int maxPopulation, double startAcceptanceRatio)
         {
             //arrange
             int incubatorSize = (int)Math.Ceiling((1 / generation) * maxPopulation * startAcceptanceRatio);
             var sut = new GeneticTerrainGenerator(maxPopulation, 2, startAcceptanceRatio, 20);
-            
+
             //act 
-            sut.NaturalSelection(list, generation);
+            sut.runSimulation();
 
             //assert
             sut.Incubator.MaxCount.Should().Be(incubatorSize);
         }
 
-        [Test]
-        [TestCase(0, 5, 0.5)]
-        public void geneticTerrain_exception(int generation, int maxPopulation, double startAcceptanceRatio)
-        {
-            //arrange
-            var sut = new GeneticTerrainGenerator(maxPopulation, 2, startAcceptanceRatio, 10);
-            //act 
-            //assert
-            sut.Invoking(a => a.NaturalSelection(list, generation))
-                .Should().Throw<DivideByZeroException>();
-        }
 
     }
 }
