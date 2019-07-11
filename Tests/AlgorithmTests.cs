@@ -20,7 +20,6 @@ namespace Tests
             //arrange
             Algorithm sut = new Algorithm(fakeNode, 0);
             //act
-
             //assert
             sut.Delta.Should().Be(0);
         }

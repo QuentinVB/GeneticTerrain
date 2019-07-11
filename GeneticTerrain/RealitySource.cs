@@ -14,7 +14,7 @@ namespace GeneticTerrain
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
         /// <returns></returns>
-        public static double GetZFromMysteryEquation(int x, int y)
+        public static double GetZFromMysteryEquation(double x, double y)
         {
             /*
                     double x = (i - 1 / 2) * 0.1;
