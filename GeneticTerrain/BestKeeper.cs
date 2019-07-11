@@ -151,5 +151,14 @@ namespace GeneticTerrain
             _items[idx2] = item;
         }
         
+        public List<T> ToList()
+        {
+            List<T> theList = new List<T>(Count);
+            foreach (T item in this)
+            {
+                theList.Add(item);
+            }
+            return theList;
+        }
     }
 }

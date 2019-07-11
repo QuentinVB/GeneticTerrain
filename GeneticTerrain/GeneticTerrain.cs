@@ -17,7 +17,7 @@ namespace GeneticTerrain
 
 
         List<Algorithm> population;
-        Heap<Algorithm> incubator;
+        BestKeeper<Algorithm> incubator;
 
         /// <summary>
         /// Allow to generate an algorithm that match the Reality
@@ -28,45 +28,68 @@ namespace GeneticTerrain
         /// <param name="gridSize">the size of the terrain</param>
         public GeneticTerrain(int maxPopulation, int maxGeneration, double startAcceptanceRatio, int gridSize)
         {
+            if (maxPopulation <= 0) throw new ArgumentException("The max population must be higher than 0",nameof(maxPopulation));
+            if (maxGeneration <= 0) throw new ArgumentException("Generations must be higher than 0",nameof(maxGeneration));
+            if (startAcceptanceRatio <= 0) throw new ArgumentException("Acceptance ratio must be higher than 0", nameof(maxGeneration));
+            if (gridSize <= 0) throw new ArgumentException("The grid size must be higher than 0", nameof(maxGeneration));
+
             this.maxPopulation = maxPopulation;
             this.maxGeneration = maxGeneration;
             this.startAcceptanceRatio = startAcceptanceRatio;
             this.gridSize = gridSize;
 
             this.population = new List<Algorithm>();
-            this.incubator = new Heap<Algorithm>((int)Math.Ceiling(maxPopulation * startAcceptanceRatio));
+            this.incubator = new BestKeeper<Algorithm>(1);
         }
 
         /// <summary>
+        /// https://www.youtube.com/watch?v=PL6jwxw9T3c
         /// evaluate each algorithm and sort them by delta in the incubator
         /// compute delta foreach case the average to produce the delta of the algorithm
         /// Delta close to 0
-        /// incubator heap : taille logarithmique
+        /// incubator heap size :inverse law (converging toward 0)
         /// </summary>
         /// <param name="population">The population.</param>
         /// <param name="startAcceptanceRatio">The start acceptance ratio.</param>
         /// <param name="generation">The generation.</param>
-        private void NaturalSelection(List<Algorithm> population, double startAcceptanceRatio, int generation)
+        private void NaturalSelection(List<Algorithm> population, int generation)
         {
-            /*
-            int incubatorSize = (int)Math.Ceiling(maxPopulation * startAcceptanceRatio) 
+            if (generation == 0) throw new DivideByZeroException();
+
+            int incubatorSize = (int)Math.Ceiling( (1/generation)*maxPopulation * startAcceptanceRatio);
+
+            this.incubator = new BestKeeper<Algorithm>(incubatorSize, (a, b) => a.CompareTo(b));
+
             foreach (Algorithm candidate in population)
             {
                 double deltaSum = 0;
-                //generate delta for matriw
+                //generate delta for matrix
                 for (int i = 0; i < gridSize; i++)
                 {
-                    for (int i = 0; i < gridSize; i++)
+                    for (int j  = 0; j< gridSize;j++)
                     {
                         double x = (i - gridSize / 2) * 0.1;
                         double y = -(j - gridSize / 2) * 0.1;
+
+                        //compute local delta
                         //INSERT COMPUTE FROM WRAPPER HERE
-                        double value = AstWrapper.Compute(candidate.RootNode,)
+                        //double value = AstWrapper.Compute(candidate.RootNode, x,y);
+
+                        //TEMP MAGICAL VALUE <- reeeeally bad !
+                        double value = 0.5;
+
+                        //Confront to the reality and sum
+                        deltaSum += Math.Pow(RealitySource.GetZFromMysteryEquation(x, y) - value,2);
+                        // improvement => store the value of Z from mystery equation to save CPU at a little cost of memory
                     }
                 }
-               
-                candidate.Delta =
-            }*/
+                candidate.Delta = deltaSum / (gridSize * gridSize);
+                deltaSum = 0;
+
+                //confront candidate to other (may the odd be ever in his favor)
+                incubator.Add(candidate);
+            }
+
         }
 
 
@@ -95,7 +118,7 @@ namespace GeneticTerrain
 
         public Algorithm runSimulation()
         {
-            int generation = 0;
+            int generation = 1;
 
             //Create initial population
             /*
@@ -106,10 +129,11 @@ namespace GeneticTerrain
 
             do
             {
-                NaturalSelection(population, startAcceptanceRatio, generation);
-
-                List<(Algorithm, Algorithm)> couples = Meetic(population);//incubator.ToList()
+                NaturalSelection(population, generation);
                 population.Clear();
+
+                List<(Algorithm, Algorithm)> couples = Meetic(incubator.ToList());
+                
 
                 // Shuffle genome between A and B
                 /* choose a method randomly => creationnnnn
