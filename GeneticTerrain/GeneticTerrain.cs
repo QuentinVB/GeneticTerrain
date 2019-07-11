@@ -227,7 +227,7 @@ namespace GeneticTerrain
                 _population.Clear();
 
                 List<(Algorithm, Algorithm)> couples = Meetic(_incubator.ToList());
-                
+
 
                 // Shuffle genome between A and B
                 /* choose a method randomly => creationnnnn
@@ -235,15 +235,12 @@ namespace GeneticTerrain
                  * 2 : 
                  */
 
-                //Mutation : 
-                /* visitor who travel the tree 
-                 * 20% chance to mutate a node
-                 * the node will be substituate with another node chosed randomly among the 5 potential nodes
-                 * a binary node have to choose randomly between the 4 operation
-                 * then fill the leaf with a constant node OR a identifier
-                 * the constant node will be a random number
-                 */
-                 //optimizer
+                
+                double mutationChance = 0.2; // MAGIC NUMBER ITS BAD !
+                Mutation(_population, mutationChance);
+                
+                
+                //optimizer
 
                 //DO IT AGAIN :)
 
@@ -256,6 +253,23 @@ namespace GeneticTerrain
             return _incubator.RemoveMax();
         }
 
-        
+        /// <summary>
+        /// //Mutation : 
+        /*a  visitor who travel the tree 
+            * 20% chance to mutate a node
+            * the node will be substituate with another node chosed randomly among the 5 potential nodes
+            * a binary node have to choose randomly between the 4 operation
+            * then fill the leaf with a constant node OR a identifier
+            * the constant node will be a random number
+            */
+        /// </summary>
+        /// <param name="population">The population.</param>
+        /// <param name="mutationChance">The mutation chance.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private void Mutation(List<Algorithm> population, double mutationChance)
+        {
+
+            throw new NotImplementedException();
+        }
     }
 }
