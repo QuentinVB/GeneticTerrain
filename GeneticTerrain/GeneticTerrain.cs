@@ -16,8 +16,11 @@ namespace GeneticTerrain
         int gridSize;
 
 
-        List<Algorithm> population;
-        BestKeeper<Algorithm> incubator;
+        List<Algorithm> _population;
+        BestKeeper<Algorithm> _incubator;
+
+        public List<Algorithm> Population { get => _population;  }
+        public BestKeeper<Algorithm> Incubator { get => _incubator; }
 
         /// <summary>
         /// Allow to generate an algorithm that match the Reality
@@ -38,8 +41,8 @@ namespace GeneticTerrain
             this.startAcceptanceRatio = startAcceptanceRatio;
             this.gridSize = gridSize;
 
-            this.population = new List<Algorithm>();
-            this.incubator = new BestKeeper<Algorithm>(1);
+            this._population = new List<Algorithm>();
+            this._incubator = new BestKeeper<Algorithm>(1);
         }
 
         /// <summary>
@@ -52,13 +55,13 @@ namespace GeneticTerrain
         /// <param name="population">The population.</param>
         /// <param name="startAcceptanceRatio">The start acceptance ratio.</param>
         /// <param name="generation">The generation.</param>
-        private void NaturalSelection(List<Algorithm> population, int generation)
+        public void NaturalSelection(List<Algorithm> population, int generation)
         {
             if (generation == 0) throw new DivideByZeroException();
 
             int incubatorSize = (int)Math.Ceiling( (1/generation)*maxPopulation * startAcceptanceRatio);
 
-            this.incubator = new BestKeeper<Algorithm>(incubatorSize, (a, b) => a.CompareTo(b));
+            this._incubator = new BestKeeper<Algorithm>(incubatorSize, (a, b) => a.CompareTo(b));
 
             foreach (Algorithm candidate in population)
             {
@@ -87,7 +90,7 @@ namespace GeneticTerrain
                 deltaSum = 0;
 
                 //confront candidate to other (may the odd be ever in his favor)
-                incubator.Add(candidate);
+                _incubator.Add(candidate);
             }
 
         }
@@ -129,10 +132,10 @@ namespace GeneticTerrain
 
             do
             {
-                NaturalSelection(population, generation);
-                population.Clear();
+                NaturalSelection(_population, generation);
+                _population.Clear();
 
-                List<(Algorithm, Algorithm)> couples = Meetic(incubator.ToList());
+                List<(Algorithm, Algorithm)> couples = Meetic(_incubator.ToList());
                 
 
                 // Shuffle genome between A and B
@@ -159,7 +162,7 @@ namespace GeneticTerrain
 
             //evaluateAt last
 
-            return incubator.RemoveMax();
+            return _incubator.RemoveMax();
         }
 
         
