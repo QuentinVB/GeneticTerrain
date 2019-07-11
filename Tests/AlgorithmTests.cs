@@ -25,8 +25,8 @@ namespace Tests
             sut.Delta.Should().Be(0);
         }
         [Test]
-        [TestCase(50,80,-1)]
-        [TestCase(80,50,1)]
+        [TestCase(50,80,1)]
+        [TestCase(80,50,-1)]
         [TestCase(80,80,0)]
         public void compareAlgorithm(int deltaA, int deltaB, int compare)
         {
