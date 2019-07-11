@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -122,7 +123,19 @@ namespace GeneticTerrain
         public Algorithm runSimulation()
         {
             int generation = 1;
+            
+            string[] lines = File.ReadAllLines(@"../../../../init_pop.txt", Encoding.UTF8);
+            
+            string[] t = lines[0].Split(',');
+            AstWrapper wrapper = new AstWrapper();
+            foreach (string wrap in t)
+            {
+                wrapper.Parse(wrap);
+            }
+            
 
+            
+           
             //Create initial population
             /*
              * Inject strings :only x et y as identifier, const unlimited
