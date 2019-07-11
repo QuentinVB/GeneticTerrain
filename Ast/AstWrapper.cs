@@ -10,6 +10,8 @@ namespace Ast
     {
 
         private SimpleAnalyzer simpleAnalyzer;
+        //compute in analyzer identifiernode 
+        // class algorithm
 
         public AstWrapper()
         {
