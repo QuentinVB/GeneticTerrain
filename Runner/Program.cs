@@ -12,9 +12,9 @@ namespace Runner
         static void Main(string[] args)
         {
             Logger logger = new Logger();
+            logger.Log("Simulation, initialization");
 
             Console.WriteLine("initialize Simulation using following values:");
-            Console.WriteLine(logger.Log("Simulation, initialization"));
 
             int maxPopulation = 200;
             int maxGeneration = 8;
@@ -22,20 +22,27 @@ namespace Runner
             int gridSize = 20;
             double mutationChance = 0.2;
 
+            //ugly var display, should be better with encapsulation
+            Console.WriteLine("");
             Console.WriteLine($"{nameof(maxPopulation)}:{maxPopulation}");
             Console.WriteLine($"{nameof(maxGeneration)}:{maxGeneration}");
             Console.WriteLine($"{nameof(startAcceptanceRatio)}:{startAcceptanceRatio}");
             Console.WriteLine($"{nameof(gridSize)}:{gridSize}");
             Console.WriteLine($"{nameof(mutationChance)}:{mutationChance}");
+            Console.WriteLine("");
 
             
-            GeneticTerrainGenerator generator = new GeneticTerrainGenerator(maxPopulation, maxGeneration, startAcceptanceRatio, gridSize, mutationChance);
-            Console.WriteLine(logger.Log("Begin Simulation"));
+            GeneticTerrainGenerator generator = new GeneticTerrainGenerator(maxPopulation, maxGeneration, startAcceptanceRatio, gridSize, mutationChance,logger);
+            var startTime = DateTimeOffset.UtcNow;
+            logger.Log("Begin Simulation");
 
             //THAR BE DRAGONZ
             //Algorithm best = generator.runSimulation();
 
             //Console.WriteLine(best);
+            logger.Log("End Simulation");
+            var elapsedTime = DateTimeOffset.UtcNow.Subtract(startTime);
+            logger.Log($"{nameof(elapsedTime)}:{elapsedTime}");
 
             logger.Print();
             //vizualise ?

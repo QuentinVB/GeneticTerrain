@@ -25,6 +25,7 @@ namespace GeneticTerrain
         public BestKeeper<Algorithm> Incubator { get => _incubator; }
 
         private AstWrapper _wrapper;
+        private Logger logger;
 
         /// <summary>
         /// Allow to generate an algorithm that match the Reality
@@ -34,7 +35,7 @@ namespace GeneticTerrain
         /// <param name="startAcceptanceRatio">the first ratio for natural selection</param>
         /// <param name="gridSize">the size of the terrain</param>
         /// <param name="mutationChance">the mutation threshold</param>
-        public GeneticTerrainGenerator(int maxPopulation, int maxGeneration, double startAcceptanceRatio, int gridSize,double mutationChance)
+        public GeneticTerrainGenerator(int maxPopulation, int maxGeneration, double startAcceptanceRatio, int gridSize,double mutationChance, Logger logger)
         {
             if (maxPopulation <= 0) throw new ArgumentException("The max population must be higher than 0",nameof(maxPopulation));
             if (maxGeneration <= 0) throw new ArgumentException("Generations must be higher than 0",nameof(maxGeneration));
@@ -47,6 +48,7 @@ namespace GeneticTerrain
             this.startAcceptanceRatio = startAcceptanceRatio;
             this.gridSize = gridSize;
             this.mutationChance = mutationChance;
+            this.logger = logger ?? new Logger();
 
             this._population = new List<Algorithm>();
             this._incubator = new BestKeeper<Algorithm>(1);
@@ -233,8 +235,7 @@ namespace GeneticTerrain
         public Algorithm runSimulation()
         {
             int generation = 1;
-
-            //Create initial population
+            logger.Log("Create initial population");
             string[] lines = File.ReadAllLines(@"../../../init_pop.txt", Encoding.UTF8);
 
             string[] t = lines[0].Split(',');
@@ -249,13 +250,17 @@ namespace GeneticTerrain
 
             do
             {
-                //NaturalSelection
+                logger.Log($"Generation {generation}");
+
+                logger.Log($"    Natural selection.");
+
                 NaturalSelection(_population, generation);
                 _population.Clear();
 
-                //Making Couple
+                logger.Log($"    Making couple.");
                 List<(Algorithm, Algorithm)> couples = Meetic(_incubator.ToList());
 
+                logger.Log($"    Making children.");
                 //Making Children
                 // Shuffle genome between A and B
                 /* choose a method randomly => creationnnnn
@@ -263,11 +268,13 @@ namespace GeneticTerrain
                  * 2 : 
                  */
 
-                //Mutate the children
-                Mutation(_population, mutationChance);             
+                logger.Log($"    Mutate the children.");
+                Mutation(_population, mutationChance);   
+
 
                 generation++;
             } while (generation < maxGeneration);
+            logger.Log($"End Generations");
 
             //evaluateAtLeast
             NaturalSelection(_population, generation);

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Runner
+namespace GeneticTerrain
 {
-    class Logger
+    public class Logger
     {
         List<string> _logContainer;
         public Logger()
@@ -16,11 +16,11 @@ namespace Runner
         }
 
 
-        public string Log(string line)
+        public void Log(string line)
         {
             string formatedLine = $"{DateTimeOffset.UtcNow.ToLocalTime().TimeOfDay} : {line}";
             _logContainer.Add(formatedLine);
-            return formatedLine;
+            Console.WriteLine(formatedLine);
         }
 
         public void Print()
