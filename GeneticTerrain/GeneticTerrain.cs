@@ -71,7 +71,7 @@ namespace GeneticTerrain
 
             int incubatorSize = (int)Math.Ceiling( (1/generation)*maxPopulation * startAcceptanceRatio);
 
-            this._incubator = new BestKeeper<Algorithm>(incubatorSize, (a, b) => a.CompareTo(b));
+            this._incubator = new BestKeeper<Algorithm>(incubatorSize<=0?1: incubatorSize, (a, b) => a.CompareTo(b));
 
             foreach (Algorithm candidate in population)
             {
@@ -235,7 +235,7 @@ namespace GeneticTerrain
             int generation = 1;
 
             //Create initial population
-            string[] lines = File.ReadAllLines(@"../../../../init_pop.txt", Encoding.UTF8);
+            string[] lines = File.ReadAllLines(@"../../../init_pop.txt", Encoding.UTF8);
 
             string[] t = lines[0].Split(',');
             foreach (string parsedEquation in t)
@@ -269,8 +269,8 @@ namespace GeneticTerrain
                 generation++;
             } while (generation < maxGeneration);
 
-            //evaluateAt last ?
-
+            //evaluateAtLeast
+            NaturalSelection(_population, generation);
             //give me the best one baby !
             return _incubator.RemoveMax();
         }       
