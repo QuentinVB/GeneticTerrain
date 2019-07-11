@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Ast\Ast.csproj" />
     <ProjectReference Include="..\GeneticTerrain\GeneticTerrain.csproj" />
   </ItemGroup>
 
