@@ -9,7 +9,7 @@ using Ast;
 
 namespace GeneticTerrain
 {
-    public class GeneticTerrain
+    public class GeneticTerrainGenerator
     {
         int maxPopulation;
         int maxGeneration;
@@ -23,6 +23,8 @@ namespace GeneticTerrain
         public List<Algorithm> Population { get => _population;  }
         public BestKeeper<Algorithm> Incubator { get => _incubator; }
 
+        private AstWrapper wrapper;
+
         /// <summary>
         /// Allow to generate an algorithm that match the Reality
         /// </summary>
@@ -30,7 +32,7 @@ namespace GeneticTerrain
         /// <param name="maxGeneration">the maximum number of generation</param>
         /// <param name="startAcceptanceRatio">the first ratio for natural selection</param>
         /// <param name="gridSize">the size of the terrain</param>
-        public GeneticTerrain(int maxPopulation, int maxGeneration, double startAcceptanceRatio, int gridSize)
+        public GeneticTerrainGenerator(int maxPopulation, int maxGeneration, double startAcceptanceRatio, int gridSize)
         {
             if (maxPopulation <= 0) throw new ArgumentException("The max population must be higher than 0",nameof(maxPopulation));
             if (maxGeneration <= 0) throw new ArgumentException("Generations must be higher than 0",nameof(maxGeneration));
@@ -44,6 +46,9 @@ namespace GeneticTerrain
 
             this._population = new List<Algorithm>();
             this._incubator = new BestKeeper<Algorithm>(1);
+
+            wrapper = new AstWrapper();
+
         }
 
         /// <summary>
@@ -76,11 +81,7 @@ namespace GeneticTerrain
                         double y = -(j - gridSize / 2) * 0.1;
 
                         //compute local delta
-                        //INSERT COMPUTE FROM WRAPPER HERE
-                        //double value = AstWrapper.Compute(candidate.RootNode, x,y);
-
-                        //TEMP MAGICAL VALUE <- reeeeally bad !
-                        double value = 0.5;
+                        double value = wrapper.Compute(candidate.RootNode, x,y);
 
                         //Confront to the reality and sum
                         deltaSum += Math.Pow(RealitySource.GetZFromMysteryEquation(x, y) - value,2);
@@ -93,7 +94,6 @@ namespace GeneticTerrain
                 //confront candidate to other (may the odd be ever in his favor)
                 _incubator.Add(candidate);
             }
-
         }
 
 

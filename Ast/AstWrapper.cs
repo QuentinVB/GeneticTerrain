@@ -20,7 +20,6 @@ namespace Ast
         }
         public Node Parse(string expression)
         {
-
             return simpleAnalyzer.Parse(expression);
         }
 
