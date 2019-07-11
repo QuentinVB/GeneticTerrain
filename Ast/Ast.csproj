@@ -48,6 +48,8 @@
     <Compile Include="Analyzer\MutationVisitor.cs" />
     <Compile Include="Analyzer\NodeVisitor.cs" />
     <Compile Include="Analyzer\OptimizationVisitor.cs" />
+    <Compile Include="Analyzer\RandomMutator.cs" />
+    <Compile Include="Analyzer\PlusMinusInvertMutator.cs" />
     <Compile Include="Analyzer\PrintVisitor.cs" />
     <Compile Include="Analyzer\SimpleAnalyzer.cs" />
     <Compile Include="AstTree.cs" />
