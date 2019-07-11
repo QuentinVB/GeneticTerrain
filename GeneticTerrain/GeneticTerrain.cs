@@ -23,7 +23,7 @@ namespace GeneticTerrain
         public List<Algorithm> Population { get => _population;  }
         public BestKeeper<Algorithm> Incubator { get => _incubator; }
 
-        private AstWrapper wrapper;
+        private AstWrapper _wrapper;
 
         /// <summary>
         /// Allow to generate an algorithm that match the Reality
@@ -47,11 +47,11 @@ namespace GeneticTerrain
             this._population = new List<Algorithm>();
             this._incubator = new BestKeeper<Algorithm>(1);
 
-            wrapper = new AstWrapper();
+            _wrapper = new AstWrapper();
 
         }
 
-        /// <summary>
+        /// <summary> OK
         /// https://www.youtube.com/watch?v=PL6jwxw9T3c
         /// evaluate each algorithm and sort them by delta in the incubator
         /// compute delta foreach case the average to produce the delta of the algorithm
@@ -71,29 +71,35 @@ namespace GeneticTerrain
 
             foreach (Algorithm candidate in population)
             {
-                double deltaSum = 0;
-                //generate delta for matrix
-                for (int i = 0; i < gridSize; i++)
-                {
-                    for (int j  = 0; j< gridSize;j++)
-                    {
-                        double x = (i - gridSize / 2) * 0.1;
-                        double y = -(j - gridSize / 2) * 0.1;
-
-                        //compute local delta
-                        double value = wrapper.Compute(candidate.RootNode, x,y);
-
-                        //Confront to the reality and sum
-                        deltaSum += Math.Pow(RealitySource.GetZFromMysteryEquation(x, y) - value,2);
-                        // improvement => store the value of Z from mystery equation to save CPU at a little cost of memory
-                    }
-                }
-                candidate.Delta = deltaSum / (gridSize * gridSize);
-                deltaSum = 0;
-
+                Evaluate(candidate);
                 //confront candidate to other (may the odd be ever in his favor)
                 _incubator.Add(candidate);
             }
+        }/// <summary>
+        /// Nested evaluation for reusability
+        /// </summary>
+        /// <param name="candidate"></param>
+        /// <returns></returns>
+        private double Evaluate(Algorithm candidate)
+        {
+            double deltaSum = 0;
+            //generate delta from matrix
+            for (int i = 0; i < gridSize; i++)
+            {
+                for (int j = 0; j < gridSize; j++)
+                {
+                    double x = (i - gridSize / 2) * 0.1;
+                    double y = -(j - gridSize / 2) * 0.1;
+
+                    //compute local delta
+                    double value = _wrapper.Compute(candidate.RootNode, x, y);
+
+                    //Confront to the reality and sum
+                    deltaSum += Math.Pow(RealitySource.GetZFromMysteryEquation(x, y) - value, 2);
+                    // improvement => store the value of Z from mystery equation to save CPU at a little cost of memory
+                }
+            } 
+            return candidate.Delta = deltaSum / (gridSize * gridSize);
         }
 
 
@@ -202,25 +208,18 @@ namespace GeneticTerrain
         public Algorithm runSimulation()
         {
             int generation = 1;
-            
-            string[] lines = File.ReadAllLines(@"../../../../init_pop.txt", Encoding.UTF8);
-            
-            string[] t = lines[0].Split(',');
-            AstWrapper wrapper = new AstWrapper();
-            foreach (string wrap in t)
-            {
-                wrapper.Parse(wrap);
-            }
-            
 
-            
-           
             //Create initial population
-            /*
-             * Inject strings :only x et y as identifier, const unlimited
-             * example : "x+1/2"
-             * exception
-             */
+            string[] lines = File.ReadAllLines(@"../../../../init_pop.txt", Encoding.UTF8);
+
+            string[] t = lines[0].Split(',');
+            foreach (string parsedEquation in t)
+            {
+                /*
+                 throw exception if : another identifier than x or y
+                 */
+                _population.Add(new Algorithm(_wrapper.Parse(parsedEquation), 0));
+            }
 
             do
             {

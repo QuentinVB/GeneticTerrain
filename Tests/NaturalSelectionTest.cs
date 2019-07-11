@@ -57,7 +57,6 @@ namespace Tests
         {
             //arrange
             var sut = new GeneticTerrainGenerator(maxPopulation, 2, startAcceptanceRatio, 10);
-            
             //act 
             //assert
             sut.Invoking(a => a.NaturalSelection(list, generation))
