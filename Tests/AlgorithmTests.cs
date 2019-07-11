@@ -20,8 +20,6 @@ namespace Tests
             //arrange
             Algorithm sut = new Algorithm(fakeNode, 0);
             //act
-            var truc = new GeneticTerrain.GeneticTerrain(3, 5, 0.4, 30);
-            Algorithm algo = truc.runSimulation();
             //assert
             sut.Delta.Should().Be(0);
         }
