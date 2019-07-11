@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Drawing.Imaging;
 using Ast;
 using System.IO;
+using GeneticTerrain;
 
 namespace Vizualizer
 {
@@ -17,7 +18,7 @@ namespace Vizualizer
             int width = 20;
             int height = 20;
             Console.WriteLine("Generate terrain");
-
+           
             //Generate fake picture
             double[,] matrix = Source.CreatePictureFromMysteryEquation(width, height);
 

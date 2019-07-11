@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ast
 {
-    class AstWrapper
+    public class AstWrapper
     {
 
         private SimpleAnalyzer simpleAnalyzer;
