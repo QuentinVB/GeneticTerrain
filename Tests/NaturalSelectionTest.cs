@@ -53,7 +53,7 @@ namespace Tests
         }
 
         [Test]
-        [TestCase(1, 0, 0.5)]
+        [TestCase(0, 5, 0.5)]
         public void geneticTerrain_exception(int generation, int maxPopulation, double startAcceptanceRatio)
         {
             //arrange
@@ -62,7 +62,7 @@ namespace Tests
             //assert
 
             sut.Invoking(a => a.NaturalSelection(list, generation))
-                .Should().Throw<KeyNotFoundException>();
+                .Should().Throw<DivideByZeroException>();
 
 
         }

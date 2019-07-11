@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ast
 {
-    class AstWrapper
+    public class AstWrapper
     {
 
         private SimpleAnalyzer simpleAnalyzer;
@@ -20,7 +20,6 @@ namespace Ast
         }
         public Node Parse(string expression)
         {
-
             return simpleAnalyzer.Parse(expression);
         }
 
