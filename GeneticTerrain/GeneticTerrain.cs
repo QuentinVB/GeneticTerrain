@@ -15,6 +15,7 @@ namespace GeneticTerrain
         int maxGeneration;
         double startAcceptanceRatio;
         int gridSize;
+        double mutationChance;
 
 
         List<Algorithm> _population;
@@ -24,6 +25,7 @@ namespace GeneticTerrain
         public BestKeeper<Algorithm> Incubator { get => _incubator; }
 
         private AstWrapper _wrapper;
+        private Logger logger;
 
         /// <summary>
         /// Allow to generate an algorithm that match the Reality
@@ -32,17 +34,21 @@ namespace GeneticTerrain
         /// <param name="maxGeneration">the maximum number of generation</param>
         /// <param name="startAcceptanceRatio">the first ratio for natural selection</param>
         /// <param name="gridSize">the size of the terrain</param>
-        public GeneticTerrainGenerator(int maxPopulation, int maxGeneration, double startAcceptanceRatio, int gridSize)
+        /// <param name="mutationChance">the mutation threshold</param>
+        public GeneticTerrainGenerator(int maxPopulation, int maxGeneration, double startAcceptanceRatio, int gridSize,double mutationChance, Logger logger)
         {
             if (maxPopulation <= 0) throw new ArgumentException("The max population must be higher than 0",nameof(maxPopulation));
             if (maxGeneration <= 0) throw new ArgumentException("Generations must be higher than 0",nameof(maxGeneration));
-            if (startAcceptanceRatio <= 0) throw new ArgumentException("Acceptance ratio must be higher than 0", nameof(maxGeneration));
-            if (gridSize <= 0) throw new ArgumentException("The grid size must be higher than 0", nameof(maxGeneration));
+            if (startAcceptanceRatio <= 0) throw new ArgumentException("Acceptance ratio must be higher than 0", nameof(startAcceptanceRatio));
+            if (gridSize <= 0) throw new ArgumentException("The grid size must be higher than 0", nameof(gridSize));
+            if (mutationChance <= 0) throw new ArgumentException("The mutation chance size must be higher than 0", nameof(mutationChance));
 
             this.maxPopulation = maxPopulation;
             this.maxGeneration = maxGeneration;
             this.startAcceptanceRatio = startAcceptanceRatio;
             this.gridSize = gridSize;
+            this.mutationChance = mutationChance;
+            this.logger = logger ?? new Logger();
 
             this._population = new List<Algorithm>();
             this._incubator = new BestKeeper<Algorithm>(1);
@@ -67,7 +73,7 @@ namespace GeneticTerrain
 
             int incubatorSize = (int)Math.Ceiling( (1/generation)*maxPopulation * startAcceptanceRatio);
 
-            this._incubator = new BestKeeper<Algorithm>(incubatorSize, (a, b) => a.CompareTo(b));
+            this._incubator = new BestKeeper<Algorithm>(incubatorSize<=0?1: incubatorSize, (a, b) => a.CompareTo(b));
 
             foreach (Algorithm candidate in population)
             {
@@ -203,59 +209,76 @@ namespace GeneticTerrain
 
             return totalAlgoList;
         }
-      
+
+        /// <summary>
+        /// Mutation
+        /// </summary>
+        /// <param name="population">The population.</param>
+        /// <param name="mutationChance">The mutation chance.</param>
+        private void Mutation(List<Algorithm> population, double mutationChance)
+        /*a visitor who travel the tree 
+        * 20% chance to mutate a node
+        * the node will be substituate with another node chosed randomly among the 5 potential nodes
+        * a binary node have to choose randomly between the 4 operation
+        * then fill the leaf with a constant node OR a identifier
+        * the constant node will be a random number
+        */
+        {
+            foreach (Algorithm candidate in population)
+            {
+                candidate.RootNode = _wrapper.MutateGraph(candidate.RootNode, mutationChance);
+                //log the mutations number ?
+                //then optimize and count node
+            }
+        }
 
         public Algorithm runSimulation()
         {
             int generation = 1;
-
-            //Create initial population
-            string[] lines = File.ReadAllLines(@"../../../../init_pop.txt", Encoding.UTF8);
+            logger.Log("Create initial population");
+            string[] lines = File.ReadAllLines(@"../../../init_pop.txt", Encoding.UTF8);
 
             string[] t = lines[0].Split(',');
             foreach (string parsedEquation in t)
             {
                 /*
-                 throw exception if : another identifier than x or y
+                 throw exception : if : another identifier than x or y
                  */
+                //if(parsedEquation.Contains()|| ) throw new ArgumentException("The identifier doesn't exist")
                 _population.Add(new Algorithm(_wrapper.Parse(parsedEquation), 0));
             }
 
             do
             {
+                logger.Log($"Generation {generation}");
+                //Natural selection
                 NaturalSelection(_population, generation);
-                _population.Clear();
+                //Since we didnt make babies, the population must not be destroyed !
+                //_population.Clear();
 
+                //Making couple
                 List<(Algorithm, Algorithm)> couples = Meetic(_incubator.ToList());
-                
 
+                //Making Children
                 // Shuffle genome between A and B
                 /* choose a method randomly => creationnnnn
                  * 1 :  choose a leaf from A randomly and substitute it with the tree from B
                  * 2 : 
                  */
 
-                //Mutation : 
-                /* visitor who travel the tree 
-                 * 20% chance to mutate a node
-                 * the node will be substituate with another node chosed randomly among the 5 potential nodes
-                 * a binary node have to choose randomly between the 4 operation
-                 * then fill the leaf with a constant node OR a identifier
-                 * the constant node will be a random number
-                 */
-                 //optimizer
+                // Mutate the children
+                Mutation(_population, mutationChance);   
 
-                //DO IT AGAIN :)
-
+                //add a peek best on incubator
+                // log mutations per generations ?
                 generation++;
-
             } while (generation < maxGeneration);
+            logger.Log($"End Generations");
 
-            //evaluateAt last
-
+            //evaluateAtLeast
+            NaturalSelection(_population, generation);
+            //give me the best one baby !
             return _incubator.RemoveMax();
-        }
-
-        
+        }       
     }
 }

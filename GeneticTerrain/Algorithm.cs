@@ -35,7 +35,8 @@ namespace GeneticTerrain
             }
         public override string ToString()
         {
-            return $"Algorithm,Delta:{_delta},NodeCount:{_nodeCount},Tree:PRINTVISITOR";
+            AstWrapper wrapper = new AstWrapper();
+            return $"Algorithm,Delta:{_delta},NodeCount:{_nodeCount},Tree:{wrapper.Print(_rootNode)}";
         }
     }
 }

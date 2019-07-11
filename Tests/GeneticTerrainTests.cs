@@ -42,15 +42,11 @@ namespace Tests
         {
             //arrange
             int incubatorSize = (int)Math.Ceiling((1 / generation) * maxPopulation * startAcceptanceRatio);
-            var sut = new GeneticTerrainGenerator(maxPopulation, 2, startAcceptanceRatio, 20);
-
+            var sut = new GeneticTerrainGenerator(maxPopulation, 2, startAcceptanceRatio, 20,0.2);
             //act 
             sut.runSimulation();
-
             //assert
             sut.Incubator.MaxCount.Should().Be(incubatorSize);
         }
-
-
     }
 }
