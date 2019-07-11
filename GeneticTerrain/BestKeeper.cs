@@ -6,7 +6,7 @@ using System.Text;
 
 namespace GeneticTerrain
 {
-    public class BestKeeper<T>: IEnumerable
+    public class BestKeeper<T> : IEnumerable
     {
         readonly T[] _items;
         readonly IComparer<T> _comparer;
@@ -33,6 +33,7 @@ namespace GeneticTerrain
             if (comparator == null) _comparer = Comparer<T>.Default;
             else _comparer = new ComparerAdapter(comparator);
             _items = new T[maxCount];
+            MaxCount = maxCount;
         }
 
         public bool Add(T candidate)
@@ -55,6 +56,7 @@ namespace GeneticTerrain
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         bool IsFull => _count == _items.Length;
+        public int MaxCount { get; private set;}
 
         void AddFromBottom(T item)
         {
@@ -151,5 +153,14 @@ namespace GeneticTerrain
             _items[idx2] = item;
         }
         
+        public List<T> ToList()
+        {
+            List<T> theList = new List<T>(Count);
+            foreach (T item in this)
+            {
+                theList.Add(item);
+            }
+            return theList;
+        }
     }
 }
