@@ -11,66 +11,72 @@ namespace GeneticTerrain
     {
         int maxPopulation;
         int maxGeneration;
-        double acceptanceRatio;
+        double startAcceptanceRatio;
 
         List<Algorithm> population;
+        Heap<Algorithm> incubator;
 
-        //Heap<Algorithm> incubator;
-
-        /*
-    max : n loop
-    if : 99%  or nth loop : stop
-    */
-
-
-        private List<(Algorithm, Algorithm)> Meetic(List<Algorithm> p)
-        {
-            var AlgorithmCouples = new List<(Algorithm, Algorithm)>();
-            var random = new Random();
-            foreach (var elmt in p)
-            {
-                for (int i = 0; i <= p.Count; i++)
-                {
-                    int index = random.Next(p.Count);
-                    AlgorithmCouples.Add((elmt, p[index]));
-                }
-            }
-            return AlgorithmCouples;
-        }
-        public GeneticTerrain(int maxPopulation, int maxGeneration, double acceptanceRatio)
+        /// <summary>
+        /// Allow to generate an algorithm that match the Reality
+        /// </summary>
+        /// <param name="maxPopulation"></param>
+        /// <param name="maxGeneration"></param>
+        /// <param name="startAcceptanceRatio"></param>
+        public GeneticTerrain(int maxPopulation, int maxGeneration, double startAcceptanceRatio)
         {
             this.maxPopulation = maxPopulation;
             this.maxGeneration = maxGeneration;
-            this.acceptanceRatio = acceptanceRatio;
+            this.startAcceptanceRatio = startAcceptanceRatio;
+        }
+        /// <summary>
+        /// evaluate each algorithm and sort them by delta in the incubator
+        /// </summary>
+        /// <param name="population"></param>
+        /// <param name="startAcceptanceRatio"></param>
+        /// <param name="generation"></param>
+        private void NaturalSelection(List<Algorithm> population, double startAcceptanceRatio, int generation)
+        {
+            throw new NotImplementedException();
         }
 
-        private List<(Algorithm, Algorithm)> Meetic(List<Algorithm> p)
-        {
-            var AlgorithmCouples = new List<(Algorithm, Algorithm)>();
+
+        /// <summary>
+        /// Meetic : who fucks who ?
+        /// each algorithm choose randomly another algorithm to mate with
+        /// ,it loop until number of couple is back to the max population
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        public List<Couple> Meetic(List<Algorithm> p)
+        {  
+            var AlgorithmCouples = new List<Couple>();
             var random = new Random();
             foreach (var elmt in p)
             {
                 for (int i = 0; i <= p.Count; i++)
                 {
                     int index = random.Next(p.Count);
-                    AlgorithmCouples.Add((elmt, p[index]));
+                    AlgorithmCouples.Add(new Couple(elmt, p[index]));
+                    if(AlgorithmCouples.Count==maxPopulation) return AlgorithmCouples;
                 }
             }
             return AlgorithmCouples;
         }
 
-        public void runSimulation()
+        public Algorithm runSimulation()
         {
             int generation = 0;
 
+            //Create initial population
+            /*
+             * Inject strings :only x et y as identifier, const unlimited
+             * example : "x+1/2"
+             * exception
+             */
+
             do
             {
-                //Create initial population
-                /*
-                 * Inject strings :only x et y as identifier, const unlimited
-                 * example : "x+1/2"
-                 * exception
-                 */
+                NaturalSelection(population, startAcceptanceRatio, generation);
 
                 //Evaluation
                 /*
@@ -80,12 +86,9 @@ namespace GeneticTerrain
 
                
 
-                 */
-                // Meetic : no asct
-                /* who fuck who ?
-                 * each algorithm choose randomly another to mate with
-                 * loop until back to normal population
-                 */
+                */
+                List<Couple> couples = Meetic(population);//incubator.ToList()
+                population.Clear();
 
                 // Shuffle genome between A and B
                 /* choose a method randomly => creationnnnn
@@ -101,12 +104,19 @@ namespace GeneticTerrain
                  * then fill the leaf with a constant node OR a identifier
                  * the constant node will be a random number
                  */
+                 //optimizer
 
                 //DO IT AGAIN :)
 
                 generation++;
 
             } while (generation < maxGeneration);
-        }        
+
+            //evaluateAt last
+
+            return incubator.RemoveMax();
+        }
+
+        
     }
 }
