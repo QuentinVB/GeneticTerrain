@@ -251,16 +251,14 @@ namespace GeneticTerrain
             do
             {
                 logger.Log($"Generation {generation}");
-
-                logger.Log($"    Natural selection.");
-
+                //Natural selection
                 NaturalSelection(_population, generation);
-                _population.Clear();
+                //Since we didnt make babies, the population must not be destroyed !
+                //_population.Clear();
 
-                logger.Log($"    Making couple.");
+                //Making couple
                 List<(Algorithm, Algorithm)> couples = Meetic(_incubator.ToList());
 
-                logger.Log($"    Making children.");
                 //Making Children
                 // Shuffle genome between A and B
                 /* choose a method randomly => creationnnnn
@@ -268,10 +266,11 @@ namespace GeneticTerrain
                  * 2 : 
                  */
 
-                logger.Log($"    Mutate the children.");
+                // Mutate the children
                 Mutation(_population, mutationChance);   
 
-
+                //add a peek best on incubator
+                // log mutations per generations ?
                 generation++;
             } while (generation < maxGeneration);
             logger.Log($"End Generations");

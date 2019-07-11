@@ -17,7 +17,7 @@ namespace Runner
             Console.WriteLine("initialize Simulation using following values:");
 
             int maxPopulation = 200;
-            int maxGeneration = 8;
+            int maxGeneration = 30;
             double startAcceptanceRatio = 0.6;
             int gridSize = 20;
             double mutationChance = 0.2;
@@ -30,17 +30,17 @@ namespace Runner
             Console.WriteLine($"{nameof(gridSize)}:{gridSize}");
             Console.WriteLine($"{nameof(mutationChance)}:{mutationChance}");
             Console.WriteLine("");
-
             
             GeneticTerrainGenerator generator = new GeneticTerrainGenerator(maxPopulation, maxGeneration, startAcceptanceRatio, gridSize, mutationChance,logger);
             var startTime = DateTimeOffset.UtcNow;
             logger.Log("Begin Simulation");
 
             //THAR BE DRAGONZ
-            //Algorithm best = generator.runSimulation();
+            Algorithm best = generator.runSimulation();
 
-            //Console.WriteLine(best);
             logger.Log("End Simulation");
+            logger.Log(best.ToString());
+
             var elapsedTime = DateTimeOffset.UtcNow.Subtract(startTime);
             logger.Log($"{nameof(elapsedTime)}:{elapsedTime}");
 

@@ -40,6 +40,19 @@ namespace Ast
             computeVisitor.VisitNode(n);
             return computeVisitor.Result;
         }
+
+        /// <summary>
+        /// Print a NodeTree
+        /// </summary>
+        /// <param name="rootNode"></param>
+        /// <returns></returns>
+        public string Print(Node rootNode)
+        {
+            PrintVisitor printvisitor = new PrintVisitor();
+            printvisitor.VisitNode(rootNode);
+            return printvisitor.Result;
+        }
+
         /// <summary>
         /// Try to mutate the given graph with the given mutation ratio
         /// </summary>
