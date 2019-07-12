@@ -28,30 +28,8 @@ namespace Vizualizer
 
             Console.WriteLine("Begin render");
 
-            try
-            {
-                //draw
-                Bitmap bmp = new Bitmap(width, height);
-                for (int x = 0; x < width; x++)
-                {
-                    for (int y = 0; y < height; y++)
-                    {
-                        double matrixvalue = Math.Abs(matrix[x, y]);
-
-                        int value = (matrixvalue > 1) ? 255 : (int)(matrixvalue * 255);
-                        Color newColor = Color.FromArgb(value, value, value);
-                        bmp.SetPixel(x, y, newColor);
-                    }
-                }
-                //save
-                
-                Directory.CreateDirectory(Path.GetDirectoryName(Directory.GetCurrentDirectory()+ "\\output\\"));
-                bmp.Save($".\\output\\{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}.png", ImageFormat.Png);
-            }
-            catch (Exception)
-            {
-                throw new Exception("An error occured while generating the bitmap");
-            }
+            Source.Render(matrix, width, height) ;
+ 
             Console.WriteLine("Render Finished");
         }
     }

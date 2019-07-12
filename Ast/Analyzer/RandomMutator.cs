@@ -45,7 +45,6 @@ namespace Ast
             double localeMutation = MutationRatio * 0.5<0.1?0:MutationRatio * 0.5;
             switch (randsource.Next(0, 5))
             {
-
                 case 0: //Mutate as BinaryNode
                     return new BinaryNode(
                         GetRandomOperationToken(),

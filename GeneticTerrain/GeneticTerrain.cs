@@ -196,27 +196,10 @@ namespace GeneticTerrain
                 //Since we didnt make babies yet, the previous generation population must not be destroyed !
                 _population.Clear();
 
-
                 //Making Children
-                //TEMPO : choose a parent as children
-                var enumerator = couples.GetEnumerator();
-                while (_population.Count < maxPopulation)
-                {
-                    if(enumerator.MoveNext())
-                    {
-                        
-                        var couple = enumerator.Current;
-                        Node child = ChildrenGenerator.Breed(couple.Item1.RootNode, couple.Item2.RootNode);
-                        _population.Add(new Algorithm(child));
-                    }
-                    else
-                    {
-                        enumerator = couples.GetEnumerator();
-                    }                  
-                }
+                BreedChildren(couples);
 
                 logger.Log($"pop {_population.Count}");
-
 
                 // Mutate the children
                 Mutation(_population, mutationChance);   
@@ -229,6 +212,24 @@ namespace GeneticTerrain
             NaturalSelection(_population, generation);
             //give me the best one baby !
             return _incubator.RemoveMax();
-        }       
+        }
+
+        private void BreedChildren(List<(Algorithm, Algorithm)> couples)
+        {
+            var enumerator = couples.GetEnumerator();
+            while (_population.Count < maxPopulation)
+            {
+                if (enumerator.MoveNext())
+                {
+                    var couple = enumerator.Current;
+                    Node child = ChildrenGenerator.Breed(couple.Item1.RootNode, couple.Item2.RootNode);
+                    _population.Add(new Algorithm(child));
+                }
+                else
+                {
+                    enumerator = couples.GetEnumerator();
+                }
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Vizualizer;
 
 namespace Runner
 {
@@ -16,10 +17,12 @@ namespace Runner
 
             Console.WriteLine("initialize Simulation using following values:");
 
-            GeneticParameters options = new GeneticParameters() {
-                maxPopulation = 200,
-                maxGeneration = 30,
-                mutationChance = 0.2
+            GeneticParameters options = new GeneticParameters()
+            {
+                MaxPopulation = 200,
+                MaxGeneration = 30,
+                MutationChance = 0.3,
+                StartAcceptanceRatio = 0.6
             };
             /*{
                 maxPopulation = 200,
@@ -44,6 +47,12 @@ namespace Runner
 
                 logger.Log("End Simulation");
                 logger.Log(best.ToString());
+                /*
+                logger.Log("Rendering...");
+                Source.Render(
+                    Source.CreatePictureFromGraph(20, 20, best.RootNode)
+                    , 20, 20);
+*/
             }
             finally 
             {
@@ -51,8 +60,8 @@ namespace Runner
                 logger.Log($"{nameof(elapsedTime)}:{elapsedTime}");
 
                 logger.Print();
-            }          
-            //vizualise ?
+            }
+            
             Console.Read();
         }
     }
