@@ -40,8 +40,10 @@ namespace GeneticTerrain
         {
             if (IsFull)
             {
-                if (_comparer.Compare(candidate, _items[0]) < 0) return false;
-                AddFromTop(candidate);
+                if (_comparer.Compare(candidate, _items[_count-1]) < 0) return false;
+                //AddFromTop(candidate);
+                _count--;
+                AddFromBottom(candidate);
                 return true;
             }
 
@@ -110,7 +112,7 @@ namespace GeneticTerrain
             {
                 int left = (2 * index) + 1;
                 int right = (2 * index) + 2;
-                if (left >= _count)
+                if (right >= _count)
                 {
                     break;
                 }
