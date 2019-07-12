@@ -24,6 +24,7 @@ namespace GeneticTerrain
         public List<Algorithm> Population { get => _population;  }
         public BestKeeper<Algorithm> Incubator { get => _incubator; }
 
+        private GenerateStringGraph _string_graph = new GenerateStringGraph();
         private AstWrapper _wrapper;
         private Logger logger;
 
@@ -155,13 +156,20 @@ namespace GeneticTerrain
             }
         }
 
+        
+
         public Algorithm runSimulation()
         {
             int generation = 1;
             logger.Log("Create initial population");
-            string[] lines = File.ReadAllLines(@"../../../init_pop.txt", Encoding.UTF8);
 
-            string[] t = lines[0].Split(',');
+            //Fichier en dur pour les tests de Quentin
+            //string[] lines = File.ReadAllLines(@"../../../init_pop.txt", Encoding.UTF8);
+            //string[] t = lines[0].Split(',');
+
+            string line = _string_graph.CreateRandomPopulation(maxPopulation);
+            string[] t = line.Split(',');
+
             foreach (string parsedEquation in t)
             {
                 /*
