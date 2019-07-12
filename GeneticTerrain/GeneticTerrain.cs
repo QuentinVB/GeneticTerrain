@@ -28,6 +28,8 @@ namespace GeneticTerrain
         private AstWrapper _wrapper;
         private Logger logger;
 
+        Random random;
+
         /// <summary>
         /// Allow to generate an algorithm that match the Reality
         /// </summary>
@@ -46,7 +48,7 @@ namespace GeneticTerrain
             this._incubator = new BestKeeper<Algorithm>(1);
 
             _wrapper = new AstWrapper();
-
+            random = new Random();
         }
 
         /// <summary> OK
@@ -63,15 +65,15 @@ namespace GeneticTerrain
         {
             if (generation == 0) throw new DivideByZeroException();
 
-            int incubatorSize = (int)Math.Ceiling( (1/generation)*maxPopulation * startAcceptanceRatio);
+            int incubatorSize = Convert.ToInt32(1.0 / generation * maxPopulation * startAcceptanceRatio);
 
-            this._incubator = new BestKeeper<Algorithm>(incubatorSize<=0?1: incubatorSize, (a, b) => a.CompareTo(b));
+            this._incubator = new BestKeeper<Algorithm>(incubatorSize<= 1 ? 1: incubatorSize, (a, b) => a.CompareTo(b));
 
             foreach (Algorithm candidate in population)
             {
                 Evaluate(candidate);
                 //confront candidate to other (may the odd be ever in his favor)
-                _incubator.Add(candidate);
+                if (!double.IsNaN(candidate.Delta))_incubator.Add(candidate);
             }
             //peek best delta
             logger.Log($" Best delta {_incubator.PeekBest.Delta}");
@@ -115,7 +117,7 @@ namespace GeneticTerrain
         public List<(Algorithm, Algorithm)> Meetic(List<Algorithm> p)
         {
             var AlgorithmCouples = new List<(Algorithm, Algorithm)>();
-            var random = new Random();
+            
             foreach (var elmt in p)
             {
                 for (int i = 0; i <= p.Count; i++)
@@ -185,13 +187,26 @@ namespace GeneticTerrain
                 //Natural selection
                 NaturalSelection(_population, generation);
 
-                //Since we didnt make babies yet, the previous generation population must not be destroyed !
-                //_population.Clear();
 
                 //Making couple
                 List<(Algorithm, Algorithm)> couples = Meetic(_incubator.ToList());
+                logger.Log($"couples {couples.Count}");
+
+                //Since we didnt make babies yet, the previous generation population must not be destroyed !
+                _population.Clear();
+
 
                 //Making Children
+                //TEMPO : choose a parent as children
+                foreach ((Algorithm, Algorithm) couple in couples)
+                {
+                    if (_population.Count< maxPopulation)
+                    {
+                        _population.Add(random.NextDouble() < 0.5 ? couple.Item1 : couple.Item2);
+                    }
+                }
+                logger.Log($"pop {_population.Count}");
+
                 // Shuffle genome between A and B
                 /* choose a method randomly => creationnnnn
                  * 1 :  choose a leaf from A randomly and substitute it with the tree from B

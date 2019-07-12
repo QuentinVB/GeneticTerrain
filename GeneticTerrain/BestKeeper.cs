@@ -68,7 +68,7 @@ namespace GeneticTerrain
             while (idx > 0)
             {
                 int fatherIdx = (idx - 1) / 2;
-                if (_comparer.Compare( _items[fatherIdx],item) > 0) break;
+                if (_comparer.Compare( _items[fatherIdx],item) >= 0) break;
                 Swap(idx, fatherIdx);
                 idx = fatherIdx;
             }
@@ -117,7 +117,7 @@ namespace GeneticTerrain
                     break;
                 }
                 int maxChildIndex = IndexOfMaxChild(left, right);
-                if (_comparer.Compare(_items[index], _items[maxChildIndex]) > 0)
+                if (_comparer.Compare(_items[index], _items[maxChildIndex]) >= 0)
                 {
                     break;
                 }
@@ -136,7 +136,7 @@ namespace GeneticTerrain
             }
             else
             {
-                if (_comparer.Compare(_items[left], _items[right]) > 0)
+                if (_comparer.Compare(_items[left], _items[right]) >= 0)
                 {
                     maxChildIndex = left;
                 }
@@ -166,5 +166,10 @@ namespace GeneticTerrain
         }
 
         public T PeekBest { get { return _items[0]; } }
+
+        public override string ToString()
+        {
+            return $"Count = {_count}";
+        }
     }
 }
