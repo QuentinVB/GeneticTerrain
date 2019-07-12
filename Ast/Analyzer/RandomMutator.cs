@@ -21,32 +21,55 @@ namespace Ast
 
         public double MutationRatio { get; private set; }
         /// <summary>
-        /// Try to mutate the node into another one if rand is below mutation ratio
+        /// Try to mutate the node into another one if rand is below mutation ratio. 
+        /// If not return the originalNode
         /// </summary>
         /// <param name="originalNode">The original node</param>
         /// <returns>The mutated node (or the original one)</returns>
-        private Node Mutate(Node originalNode)
+        private bool TryMutate(Node originalNode, out Node mutatedNode)
         {
             //Improvement: Mutate by average; Reduce mutation ratio through generations ?
             if (randsource.NextDouble()<MutationRatio)
             {
-                switch (randsource.Next(0, 5))
-                {
-                    case 0: //Mutate as BinaryNode
-                        return new BinaryNode(GetRandomOperationToken(), GetRandomLeaf(), GetRandomLeaf());
-                    case 1: //Mutate as ConstantNode
-                        return GetRandomLeaf();
-                    case 2: //Mutate as IdentifierNode
-                        return GetRandomLeaf();
-                    case 3: //Mutate as IfNode
-                        return new IfNode(GetRandomLeaf(), GetRandomLeaf(), GetRandomLeaf());
-                    case 4: //Mutate as UnaryNode
-                        return new UnaryNode(TokenType.Minus,GetRandomLeaf());
-                    default:
-                        return originalNode;
-                }
+                mutatedNode = GetRandomNode(MutationRatio);
+                return true;
             }
-            return originalNode;
+            mutatedNode = originalNode;
+            return false;
+        }
+        private Node GetRandomNode(double MutationRatio)
+        {
+            double localeMutation = MutationRatio * 0.5<0.1?0:MutationRatio * 0.5;
+            switch (randsource.Next(0, 5))
+            {
+
+                case 0: //Mutate as BinaryNode
+                    return new BinaryNode(
+                        GetRandomOperationToken(),
+                        MutateLocaly(localeMutation),
+                        MutateLocaly(localeMutation));
+
+                case 1: //Mutate as ConstantNode
+                    return MutateLocaly(localeMutation);
+
+                case 2: //Mutate as IdentifierNode
+                    return MutateLocaly(localeMutation);
+
+                case 3: //Mutate as IfNode
+                    return new IfNode(
+                        MutateLocaly(localeMutation),
+                        MutateLocaly(localeMutation),
+                       MutateLocaly(localeMutation));
+
+                case 4: //Mutate as UnaryNode
+                    return new UnaryNode(TokenType.Minus, MutateLocaly(localeMutation));
+                default:
+                    return GetRandomLeaf();
+            }
+            Node MutateLocaly(double localeMutationRatio)
+            {
+                return randsource.NextDouble() < localeMutationRatio ? GetRandomNode(localeMutationRatio) : GetRandomLeaf();
+            }
         }
         /// <summary>
         /// Provide a binary operation token randomly
@@ -83,33 +106,47 @@ namespace Ast
 
         public override Node Visit(ConstantNode n)
         {
-            return Mutate(n);
+            if (TryMutate(n, out Node newNode))
+            {
+                return newNode;
+            }
+            return n;
         }
 
         public override Node Visit(IdentifierNode n)
         {
-            return Mutate(n);
-        }
-
-        public override Node Visit(ErrorNode n)
-        {
-            return Mutate(n);
+            if (TryMutate(n, out Node newNode))
+            {
+                return newNode;
+            }
+            return n;
         }
 
         public override Node Visit(BinaryNode n)
         {
-           
-            return Mutate(n);
+            if (TryMutate(n, out Node newNode))
+            {
+                return newNode;
+            }
+            return base.Visit(n);
         }
 
         public override Node Visit(UnaryNode n)
         {
-            return Mutate(n);
+            if (TryMutate(n, out Node newNode))
+            {
+                return newNode;
+            }
+            return base.Visit(n);
         }
 
         public override Node Visit(IfNode n)
         {
-            return Mutate(n);
+            if (TryMutate(n, out Node newNode))
+            {
+                return newNode;
+            }
+            return base.Visit(n);
         }
     } 
 }

@@ -10,8 +10,11 @@ namespace Ast
 
         public string Result => _buffer.ToString();
 
+        public int NodeCount { get; private set; }
+
         public override void Visit( BinaryNode n )
         {
+            NodeCount++;
             _buffer.Append( '(' );
             VisitNode( n.Left );
             _buffer.Append( ' ' );
@@ -30,16 +33,22 @@ namespace Ast
 
         public override void Visit( ConstantNode n )
         {
+            NodeCount++;
+
             _buffer.Append( n.Value );
         }
 
         public override void Visit( IdentifierNode n )
         {
+            NodeCount++;
+
             _buffer.Append( n.Identifier );
         }
 
         public override void Visit( IfNode n )
         {
+            NodeCount++;
+
             _buffer.Append( " (" );
             VisitNode( n.Condition );
             _buffer.Append( " ? " );
@@ -51,6 +60,8 @@ namespace Ast
 
         public override void Visit( UnaryNode n )
         {
+            NodeCount++;
+
             _buffer.Append( '(' );
             switch( n.Type )
             {

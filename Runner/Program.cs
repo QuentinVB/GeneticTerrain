@@ -30,21 +30,27 @@ namespace Runner
             Console.WriteLine($"{nameof(gridSize)}:{gridSize}");
             Console.WriteLine($"{nameof(mutationChance)}:{mutationChance}");
             Console.WriteLine("");
-            
-            GeneticTerrainGenerator generator = new GeneticTerrainGenerator(maxPopulation, maxGeneration, startAcceptanceRatio, gridSize, mutationChance,logger);
+
             var startTime = DateTimeOffset.UtcNow;
-            logger.Log("Begin Simulation");
+            try
+            {
+                GeneticTerrainGenerator generator = new GeneticTerrainGenerator(maxPopulation, maxGeneration, startAcceptanceRatio, gridSize, mutationChance, logger);
+                
+                logger.Log("Begin Simulation");
 
-            //THAR BE DRAGONZ
-            Algorithm best = generator.runSimulation();
+                //THAR BE DRAGONZ
+                Algorithm best = generator.runSimulation();
 
-            logger.Log("End Simulation");
-            logger.Log(best.ToString());
+                logger.Log("End Simulation");
+                logger.Log(best.ToString());
+            }
+            finally 
+            {
+                var elapsedTime = DateTimeOffset.UtcNow.Subtract(startTime);
+                logger.Log($"{nameof(elapsedTime)}:{elapsedTime}");
 
-            var elapsedTime = DateTimeOffset.UtcNow.Subtract(startTime);
-            logger.Log($"{nameof(elapsedTime)}:{elapsedTime}");
-
-            logger.Print();
+                logger.Print();
+            }          
             //vizualise ?
             Console.Read();
         }
