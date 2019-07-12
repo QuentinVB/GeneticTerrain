@@ -13,11 +13,20 @@ namespace Ast
             Right = right ?? throw new ArgumentNullException( nameof( right ) );
         }
 
+        public BinaryNode(Node rootNode, Node left, Node right)
+        {
+            Rootnode = rootNode;
+            Left = left;
+            Right = right;
+        }
+
         public TokenType Type { get; }
 
         public Node Left { get; }
 
         public Node Right { get; }
+
+        public Node Rootnode { get; }
 
         public override string ToString() => $"({Type} {Left} {Right})";
 

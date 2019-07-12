@@ -10,8 +10,9 @@ namespace GeneticTerrain
     public class Algorithm : IComparable<object>
     {
         Node _rootNode;
+        Node _rightNode;
+        Node _leftNode;
         double _delta;
-
         int _nodeCount;
 
         public Algorithm(Node rootNode, double delta)
@@ -20,9 +21,18 @@ namespace GeneticTerrain
             _delta = delta;
         }
 
+        public Algorithm()
+            :this(null, 0)
+        {
+
+        }
+
         public int NodeCount { get => _nodeCount; set => _nodeCount = value; }
         public double Delta { get => _delta; set => _delta = value; }
         public Node RootNode { get => _rootNode; set => _rootNode = value; }
+        public Node LeftNode { get => _leftNode; set => _leftNode = value }
+        public Node RightNode { get => _rightNode ; set => _rightNode = value }
+
 
         public int CompareTo(object other)
         {
@@ -37,6 +47,12 @@ namespace GeneticTerrain
         {
             AstWrapper wrapper = new AstWrapper();
             return $"Algorithm,Delta:{_delta},NodeCount:{_nodeCount},Tree:{wrapper.Print(_rootNode)}";
+        }
+
+        public Node NodeConstructor(Node rootNode, Node leftNode,Node rightNode)
+        {
+            //overload de la class BinaryNode 
+            return new BinaryNode(rootNode,leftNode,rightNode);
         }
     }
 }
