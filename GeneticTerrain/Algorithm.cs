@@ -29,16 +29,16 @@ namespace GeneticTerrain
 
         public int NodeCount { get => _nodeCount; }
         
-        public Algorithm
-            :this(null, 0)
+        public Algorithm()
+            :this(null)
         {
 
         }
 
         public double Delta { get => _delta; set => _delta = value; }
         public Node RootNode { get => _rootNode; set => _rootNode = value; }
-        public Node LeftNode { get => _leftNode; set => _leftNode = value }
-        public Node RightNode { get => _rightNode ; set => _rightNode = value }
+        public Node LeftNode { get => _leftNode; set => _leftNode = value; }
+        public Node RightNode { get => _rightNode; set => _rightNode = value; }
 
 
         public int CompareTo(object other)
