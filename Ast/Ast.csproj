@@ -54,6 +54,7 @@
     <Compile Include="Analyzer\SimpleAnalyzer.cs" />
     <Compile Include="AstTree.cs" />
     <Compile Include="AstWrapper.cs" />
+    <Compile Include="Analyzer\BreederVisitor.cs" />
     <Compile Include="Nodes\BinaryNode.cs" />
     <Compile Include="Nodes\ConstantNode.cs" />
     <Compile Include="Nodes\ErrorNode.cs" />

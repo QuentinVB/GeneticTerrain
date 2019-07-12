@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithm.cs" />
+    <Compile Include="ChildrenGenerator.cs" />
     <Compile Include="Couple.cs" />
     <Compile Include="GenerateStringGraph.cs" />
     <Compile Include="GeneticParameters.cs" />

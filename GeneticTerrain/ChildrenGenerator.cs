@@ -15,6 +15,17 @@ namespace GeneticTerrain
             
         }
 
+        // Shuffle genome between A and B
+        /* choose a method randomly => creationnnnn
+         * 1 :  choose a leaf from A randomly and substitute it with the tree from B
+         * 2 : 
+         */
+        public static Node Breed(Node parent1, Node parent2)
+        {
+            AstWrapper wrapper = new AstWrapper();
+            return wrapper.Breed(parent1,parent2);
+        }
+
         private (Algorithm, Algorithm) FirstElmtInsideSecondElmtSuffle((Algorithm a1, Algorithm a2) algo)
         {
             Algorithm a1, a2,a3;
