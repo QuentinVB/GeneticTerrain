@@ -17,10 +17,10 @@ namespace GeneticTerrain
         int gridSize;
         double mutationChance;
 
-
         List<Algorithm> _population;
         BestKeeper<Algorithm> _incubator;
 
+        //Only for the tests
         public List<Algorithm> Population { get => _population;  }
         public BestKeeper<Algorithm> Incubator { get => _incubator; }
 
@@ -31,24 +31,15 @@ namespace GeneticTerrain
         /// <summary>
         /// Allow to generate an algorithm that match the Reality
         /// </summary>
-        /// <param name="maxPopulation">the maximum population generated</param>
-        /// <param name="maxGeneration">the maximum number of generation</param>
-        /// <param name="startAcceptanceRatio">the first ratio for natural selection</param>
-        /// <param name="gridSize">the size of the terrain</param>
-        /// <param name="mutationChance">the mutation threshold</param>
-        public GeneticTerrainGenerator(int maxPopulation, int maxGeneration, double startAcceptanceRatio, int gridSize,double mutationChance, Logger logger=null)
+        /// <param name="parameter">the size of the terrain</param>
+        /// <param name="logger">the logger object</param>
+        public GeneticTerrainGenerator(GeneticParameters options, Logger logger=null)
         {
-            if (maxPopulation <= 0) throw new ArgumentException("The max population must be higher than 0",nameof(maxPopulation));
-            if (maxGeneration <= 0) throw new ArgumentException("Generations must be higher than 0",nameof(maxGeneration));
-            if (startAcceptanceRatio <= 0) throw new ArgumentException("Acceptance ratio must be higher than 0", nameof(startAcceptanceRatio));
-            if (gridSize <= 0) throw new ArgumentException("The grid size must be higher than 0", nameof(gridSize));
-            if (mutationChance <= 0) throw new ArgumentException("The mutation chance size must be higher than 0", nameof(mutationChance));
-
-            this.maxPopulation = maxPopulation;
-            this.maxGeneration = maxGeneration;
-            this.startAcceptanceRatio = startAcceptanceRatio;
-            this.gridSize = gridSize;
-            this.mutationChance = mutationChance;
+            this.maxPopulation = options.MaxPopulation;
+            this.maxGeneration = options.MaxGeneration;
+            this.startAcceptanceRatio = options.StartAcceptanceRatio;
+            this.gridSize = options.GridSize;
+            this.mutationChance = options.MutationChance;
             this.logger = logger ?? new Logger();
 
             this._population = new List<Algorithm>();
@@ -82,7 +73,12 @@ namespace GeneticTerrain
                 //confront candidate to other (may the odd be ever in his favor)
                 _incubator.Add(candidate);
             }
-        }/// <summary>
+            //peek best delta
+            logger.Log($" Best delta {population.Count}");
+
+        }
+
+        /// <summary>
         /// Nested evaluation for reusability
         /// </summary>
         /// <param name="candidate"></param>
@@ -133,7 +129,6 @@ namespace GeneticTerrain
             return AlgorithmCouples;
         }
 
-
         /// <summary>
         /// Mutation
         /// </summary>
@@ -148,15 +143,21 @@ namespace GeneticTerrain
         * the constant node will be a random number
         */
         {
+            double mutationSum = 0;
             foreach (Algorithm candidate in population)
             {
-                candidate.RootNode = _wrapper.MutateGraph(candidate.RootNode, mutationChance);
-                //log the mutations number ?
-                //then optimize and count node
+                
+                candidate.RootNode = _wrapper.MutateGraph(candidate.RootNode, mutationChance, out int mutationCount);
+
+                candidate.RootNode = _wrapper.OptimizeGraph(candidate.RootNode);
+
+                mutationSum += mutationCount / candidate.NodeCount;
+
             }
+            logger.Log($" {Math.Round( mutationSum/population.Count *100.0,2)}% of mutations on {population.Count} elements");
         }
 
-        
+
 
         public Algorithm runSimulation()
         {
@@ -184,7 +185,7 @@ namespace GeneticTerrain
                 logger.Log($"Generation {generation}");
                 //Natural selection
                 NaturalSelection(_population, generation);
-                //Since we didnt make babies, the population must not be destroyed !
+                //Since we didnt make babies yet, the population must not be destroyed !
                 //_population.Clear();
 
                 //Making couple
@@ -201,7 +202,6 @@ namespace GeneticTerrain
                 Mutation(_population, mutationChance);   
 
                 //add a peek best on incubator ?
-                // log mutations per generations ?
                 generation++;
             } while (generation < maxGeneration);
             logger.Log($"End Generations");

@@ -10,6 +10,8 @@ namespace Ast
     {
         Random randsource = new Random();
 
+        public int MutationCount { get; private set; }
+
         /// <summary>
         /// A Mutation visitor who randomly mutate the node he visits
         /// </summary>
@@ -39,6 +41,7 @@ namespace Ast
         }
         private Node GetRandomNode(double MutationRatio)
         {
+            MutationCount++;
             double localeMutation = MutationRatio * 0.5<0.1?0:MutationRatio * 0.5;
             switch (randsource.Next(0, 5))
             {
