@@ -165,7 +165,7 @@ namespace GeneticTerrain
             return theList;
         }
 
-        public T PeekBest { get { return _items[0]; } }
+        public T PeekBest { get { return _count>0? _items[0]: default(T); } }
 
         public override string ToString()
         {

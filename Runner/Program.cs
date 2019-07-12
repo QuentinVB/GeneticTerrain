@@ -16,7 +16,11 @@ namespace Runner
 
             Console.WriteLine("initialize Simulation using following values:");
 
-            GeneticParameters options = new GeneticParameters();
+            GeneticParameters options = new GeneticParameters() {
+                maxPopulation = 200,
+                maxGeneration = 30,
+                mutationChance = 0.2
+            };
             /*{
                 maxPopulation = 200,
                 maxGeneration = 30,

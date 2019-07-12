@@ -18,6 +18,20 @@ namespace Ast
             simpleAnalyzer = new SimpleAnalyzer();
             computeVisitor = new ComputeVisitor();
         }
+
+        /// <summary>
+        /// Breeds the specified parents.
+        /// </summary>
+        /// <param name="parent1">The parent1.</param>
+        /// <param name="parent2">The parent2.</param>
+        /// <returns></returns>
+        public Node Breed(Node parent1, Node parent2)
+        {
+            BreederVisitor breederVisitor = new BreederVisitor();
+
+            return new BinaryNode(TokenType.Div,new BinaryNode(TokenType.Plus, parent1, parent2),new ConstantNode(2));
+        }
+
         /// <summary>
         /// Parse the given expression into a node graph
         /// </summary>

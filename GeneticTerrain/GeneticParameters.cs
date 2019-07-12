@@ -9,11 +9,11 @@ namespace GeneticTerrain
 {
     public class GeneticParameters
     {
-        int maxPopulation;
-        int maxGeneration;
-        double startAcceptanceRatio;
-        int gridSize;
-        double mutationChance;
+        public int maxPopulation;
+        public int maxGeneration;
+        public double startAcceptanceRatio;
+        public int gridSize;
+        public double mutationChance;
 
         /// <summary>
         /// The parameter payload for the genetic algorithm

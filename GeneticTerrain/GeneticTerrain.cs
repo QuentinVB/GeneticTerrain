@@ -76,7 +76,8 @@ namespace GeneticTerrain
                 if (!double.IsNaN(candidate.Delta))_incubator.Add(candidate);
             }
             //peek best delta
-            logger.Log($" Best delta {_incubator.PeekBest.Delta}");
+            var bestdelta = _incubator.PeekBest != null ? _incubator.PeekBest.Delta : 0.0;
+            logger.Log($" Best delta {bestdelta}");
         }
 
         /// <summary>
@@ -198,20 +199,24 @@ namespace GeneticTerrain
 
                 //Making Children
                 //TEMPO : choose a parent as children
-                foreach ((Algorithm, Algorithm) couple in couples)
+                var enumerator = couples.GetEnumerator();
+                while (_population.Count < maxPopulation)
                 {
-                    if (_population.Count< maxPopulation)
+                    if(enumerator.MoveNext())
                     {
-                        _population.Add(random.NextDouble() < 0.5 ? couple.Item1 : couple.Item2);
+                        
+                        var couple = enumerator.Current;
+                        Node child = ChildrenGenerator.Breed(couple.Item1.RootNode, couple.Item2.RootNode);
+                        _population.Add(new Algorithm(child));
                     }
+                    else
+                    {
+                        enumerator = couples.GetEnumerator();
+                    }                  
                 }
+
                 logger.Log($"pop {_population.Count}");
 
-                // Shuffle genome between A and B
-                /* choose a method randomly => creationnnnn
-                 * 1 :  choose a leaf from A randomly and substitute it with the tree from B
-                 * 2 : 
-                 */
 
                 // Mutate the children
                 Mutation(_population, mutationChance);   
