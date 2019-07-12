@@ -164,5 +164,7 @@ namespace GeneticTerrain
             }
             return theList;
         }
+
+        public T PeekBest { get { return _items[0]; } }
     }
 }

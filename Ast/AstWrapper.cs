@@ -71,11 +71,27 @@ namespace Ast
         /// <param name="n">The root node</param>
         /// <param name="mutationRatio">The threshold to mutate</param>
         /// <returns>The root node of the mutated graph</returns>
-        public Node MutateGraph(Node n, double mutationRatio)
+        public Node MutateGraph(Node n, double mutationRatio, out int mutationCount)
         {
             RandomMutator randomMutator = new RandomMutator(mutationRatio);
+            Node newGraph = randomMutator.VisitNode(n);
+            mutationCount = randomMutator.MutationCount;
 
-            return randomMutator.VisitNode(n);
+            return newGraph;
+        }
+
+        /// <summary>
+        /// Optimize the given graph
+        /// </summary>
+        /// <param name="n">The root node</param>
+        /// <returns>The root node of the optimized graph</returns>
+        public Node OptimizeGraph(Node n)
+        {
+
+            //node count via Ref ?
+            OptimizationVisitor optimizationVisitor = new OptimizationVisitor();
+
+            return optimizationVisitor.VisitNode(n);
         }
 
     }
