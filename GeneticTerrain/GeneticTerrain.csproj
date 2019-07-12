@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Algorithm.cs" />
     <Compile Include="Couple.cs" />
+    <Compile Include="GenerateStringGraph.cs" />
     <Compile Include="GeneticTerrain.cs" />
     <Compile Include="BestKeeper.cs" />
     <Compile Include="Logger.cs" />
