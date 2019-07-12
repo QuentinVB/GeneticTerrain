@@ -50,9 +50,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Ast\Ast.csproj">
+      <Project>{00B1DC8F-8AE7-435E-B6CA-4D667DC55BB4}</Project>
+      <Name>Ast</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GeneticTerrain\GeneticTerrain.csproj">
       <Project>{577cde0f-0515-4317-8300-982c0eb8c44d}</Project>
       <Name>GeneticTerrain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Vizualizer\Vizualizer.csproj">
+      <Project>{77e05bf5-62ab-4d6c-abc4-49ec13d1cd85}</Project>
+      <Name>Vizualizer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

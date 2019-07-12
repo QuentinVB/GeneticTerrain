@@ -28,8 +28,7 @@ namespace Ast
         public Node Breed(Node parent1, Node parent2)
         {
             BreederVisitor breederVisitor = new BreederVisitor();
-
-            return new BinaryNode(TokenType.Div,new BinaryNode(TokenType.Plus, parent1, parent2),new ConstantNode(2));
+            throw new NotImplementedException();
         }
 
         /// <summary>

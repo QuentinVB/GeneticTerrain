@@ -22,8 +22,34 @@ namespace GeneticTerrain
          */
         public static Node Breed(Node parent1, Node parent2)
         {
-            AstWrapper wrapper = new AstWrapper();
-            return wrapper.Breed(parent1,parent2);
+            Random rand = new Random();
+
+            if (rand.NextDouble()<0.2)
+            {
+                return parent1;
+            }
+            else if (rand.NextDouble() < 0.4)
+            {
+                return parent2;
+            }
+
+            return 
+                new BinaryNode(
+                    TokenType.Mult, 
+                    new BinaryNode(
+                        TokenType.Div, 
+                        new BinaryNode(
+                            TokenType.Plus, 
+                            parent1, 
+                            parent2), 
+                        new ConstantNode(2)), 
+                    new ConstantNode(
+                        rand.NextDouble()
+                        )
+                       );
+
+            //AstWrapper wrapper = new AstWrapper();
+            //return wrapper.Breed(parent1,parent2);
         }
 
         private (Algorithm, Algorithm) FirstElmtInsideSecondElmtSuffle((Algorithm a1, Algorithm a2) algo)
