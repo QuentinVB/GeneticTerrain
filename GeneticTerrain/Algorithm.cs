@@ -51,7 +51,7 @@ namespace GeneticTerrain
 
         public Node NodeConstructor(Node rootNode, Node leftNode,Node rightNode)
         {
-            //il faut overrider la class Binary pour remplacer le node correspondant au tokentype
+            //overload de la class BinaryNode 
             return new BinaryNode(rootNode,leftNode,rightNode);
         }
     }
