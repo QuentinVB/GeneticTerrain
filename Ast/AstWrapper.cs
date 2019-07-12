@@ -54,6 +54,18 @@ namespace Ast
         }
 
         /// <summary>
+        /// NodeTree count
+        /// </summary>
+        /// <param name="rootNode"></param>
+        /// <returns></returns>
+        public int NodeCount(Node rootNode)
+        {
+            PrintVisitor printvisitor = new PrintVisitor();
+            printvisitor.VisitNode(rootNode);
+            return printvisitor.NodeCount;
+        }
+
+        /// <summary>
         /// Try to mutate the given graph with the given mutation ratio
         /// </summary>
         /// <param name="n">The root node</param>

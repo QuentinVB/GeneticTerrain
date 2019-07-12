@@ -35,7 +35,7 @@ namespace GeneticTerrain
         /// <param name="startAcceptanceRatio">the first ratio for natural selection</param>
         /// <param name="gridSize">the size of the terrain</param>
         /// <param name="mutationChance">the mutation threshold</param>
-        public GeneticTerrainGenerator(int maxPopulation, int maxGeneration, double startAcceptanceRatio, int gridSize,double mutationChance, Logger logger)
+        public GeneticTerrainGenerator(int maxPopulation, int maxGeneration, double startAcceptanceRatio, int gridSize,double mutationChance, Logger logger=null)
         {
             if (maxPopulation <= 0) throw new ArgumentException("The max population must be higher than 0",nameof(maxPopulation));
             if (maxGeneration <= 0) throw new ArgumentException("Generations must be higher than 0",nameof(maxGeneration));
@@ -245,7 +245,7 @@ namespace GeneticTerrain
                  throw exception : if : another identifier than x or y
                  */
                 //if(parsedEquation.Contains()|| ) throw new ArgumentException("The identifier doesn't exist")
-                _population.Add(new Algorithm(_wrapper.Parse(parsedEquation), 0));
+                _population.Add(new Algorithm(_wrapper.Parse(parsedEquation)));
             }
 
             do
@@ -266,10 +266,10 @@ namespace GeneticTerrain
                  * 2 : 
                  */
 
-                // Mutate the children
+                // Mutate the children in place
                 Mutation(_population, mutationChance);   
 
-                //add a peek best on incubator
+                //add a peek best on incubator ?
                 // log mutations per generations ?
                 generation++;
             } while (generation < maxGeneration);
