@@ -111,5 +111,27 @@ namespace Tests
             sut.RemoveMax().Delta.Should().Be(algo3.Delta);
             sut.RemoveMax().Delta.Should().Be(algo4.Delta);
         }
+        [Test]
+        public void bestkeeper_peekbest()
+        {
+            //arrange
+            var sut = new BestKeeper<Algorithm>(5);
+
+            //act
+            sut.Add(algo1);
+            sut.Add(algo2);
+            sut.Add(algo3);
+            sut.Add(algo4);
+            sut.Add(algo5);
+            sut.Add(algo6);
+
+
+            sut.Count.Should().Be(5);
+
+            //assert
+            sut.PeekBest.Delta.Should().Be(1);
+            sut.Count.Should().Be(5);
+
+        }
     }
 }

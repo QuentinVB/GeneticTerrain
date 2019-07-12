@@ -36,7 +36,7 @@ namespace Runner
                 logger.Log("Begin Simulation");
 
                 //THAR BE DRAGONZ
-                Algorithm best = generator.runSimulation();
+                Algorithm best = generator.RunSimulation();
 
                 logger.Log("End Simulation");
                 logger.Log(best.ToString());

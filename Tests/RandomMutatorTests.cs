@@ -27,7 +27,7 @@ namespace Tests
             var n = sut.Parse(toParse);
             string print = sut.Print(n);
             //act
-            var nut = sut.MutateGraph(n, 1.0);
+            var nut = sut.MutateGraph(n, 1.0,out int mutationratio);
 
             //assert
             sut.Print(nut).Should().NotBe(print);

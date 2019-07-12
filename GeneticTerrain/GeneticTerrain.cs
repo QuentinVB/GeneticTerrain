@@ -11,11 +11,11 @@ namespace GeneticTerrain
 {
     public class GeneticTerrainGenerator
     {
-        int maxPopulation;
-        int maxGeneration;
-        double startAcceptanceRatio;
-        int gridSize;
-        double mutationChance;
+        readonly int maxPopulation;
+        readonly int maxGeneration;
+        readonly double startAcceptanceRatio;
+        readonly int gridSize;
+        readonly double mutationChance;
 
         List<Algorithm> _population;
         BestKeeper<Algorithm> _incubator;
@@ -74,8 +74,7 @@ namespace GeneticTerrain
                 _incubator.Add(candidate);
             }
             //peek best delta
-            logger.Log($" Best delta {population.Count}");
-
+            logger.Log($" Best delta {_incubator.PeekBest.Delta}");
         }
 
         /// <summary>
@@ -152,14 +151,13 @@ namespace GeneticTerrain
                 candidate.RootNode = _wrapper.OptimizeGraph(candidate.RootNode);
 
                 mutationSum += mutationCount / candidate.NodeCount;
-
             }
             logger.Log($" {Math.Round( mutationSum/population.Count *100.0,2)}% of mutations on {population.Count} elements");
         }
 
 
 
-        public Algorithm runSimulation()
+        public Algorithm RunSimulation()
         {
             int generation = 1;
             logger.Log("Create initial population");
@@ -183,9 +181,11 @@ namespace GeneticTerrain
             do
             {
                 logger.Log($"Generation {generation}");
+
                 //Natural selection
                 NaturalSelection(_population, generation);
-                //Since we didnt make babies yet, the population must not be destroyed !
+
+                //Since we didnt make babies yet, the previous generation population must not be destroyed !
                 //_population.Clear();
 
                 //Making couple
@@ -198,10 +198,9 @@ namespace GeneticTerrain
                  * 2 : 
                  */
 
-                // Mutate the children in place
+                // Mutate the children
                 Mutation(_population, mutationChance);   
 
-                //add a peek best on incubator ?
                 generation++;
             } while (generation < maxGeneration);
             logger.Log($"End Generations");
