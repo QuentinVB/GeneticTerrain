@@ -121,7 +121,7 @@ namespace GeneticTerrain
             
             foreach (var elmt in p)
             {
-                for (int i = 0; i <= p.Count; i++)
+                for (int i = 0; i <= p.Count *2 ; i++)
                 {
                     int index = random.Next(p.Count);
                     AlgorithmCouples.Add((elmt, p[index]));
@@ -129,6 +129,17 @@ namespace GeneticTerrain
                 }
             }
             return AlgorithmCouples;
+        }
+
+        private void BreedChildren(List<(Algorithm, Algorithm)> couples)
+        {
+            foreach ((Algorithm, Algorithm) couple in couples)
+            {
+                Node child = ChildrenGenerator.Breed(couple.Item1.RootNode, couple.Item2.RootNode);
+                _population.Add(new Algorithm(child));
+                if (_population.Count >= maxPopulation) break;
+                
+            }
         }
 
         /// <summary>
@@ -214,22 +225,6 @@ namespace GeneticTerrain
             return _incubator.RemoveMax();
         }
 
-        private void BreedChildren(List<(Algorithm, Algorithm)> couples)
-        {
-            var enumerator = couples.GetEnumerator();
-            while (_population.Count < maxPopulation)
-            {
-                if (enumerator.MoveNext())
-                {
-                    var couple = enumerator.Current;
-                    Node child = ChildrenGenerator.Breed(couple.Item1.RootNode, couple.Item2.RootNode);
-                    _population.Add(new Algorithm(child));
-                }
-                else
-                {
-                    enumerator = couples.GetEnumerator();
-                }
-            }
-        }
+        
     }
 }
