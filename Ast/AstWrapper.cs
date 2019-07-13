@@ -84,9 +84,9 @@ namespace Ast
         /// <param name="n">The root node</param>
         /// <param name="mutationRatio">The threshold to mutate</param>
         /// <returns>The root node of the mutated graph</returns>
-        public Node MutateGraph(Node n, double mutationRatio, out int mutationCount)
+        public Node MutateGraph(Node n, double mutationRatio, Random randomsource, out int mutationCount)
         {
-            RandomMutator randomMutator = new RandomMutator(mutationRatio);
+            RandomMutator randomMutator = new RandomMutator(mutationRatio, randomsource);
             Node newGraph = randomMutator.VisitNode(n);
             mutationCount = randomMutator.MutationCount;
 
@@ -111,9 +111,9 @@ namespace Ast
         /// Get a randomized graph
         /// </summary>
         /// <returns>The root node of the randomized graph</returns>
-        public Node GetRandomGraph()
+        public Node GetRandomGraph(Random randomsource)
         {
-            return RandomNodeSource.GetRandomNode(1.0);
+            return RandomNodeSource.GetRandomNode(1.0, randomsource);
         }
     }
 }

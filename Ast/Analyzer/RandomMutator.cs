@@ -8,7 +8,7 @@ namespace Ast
 {
     public class RandomMutator : MutationVisitor
     {
-        Random randsource = new Random();
+        Random randsource;
 
         public int MutationCount { get; private set; }
 
@@ -16,9 +16,10 @@ namespace Ast
         /// A Mutation visitor who randomly mutate the node he visits
         /// </summary>
         /// <param name="mutationRatio">The threshold to mutate</param>
-        public RandomMutator(double mutationRatio)
+        public RandomMutator(double mutationRatio, Random randsource)
         {
             this.MutationRatio = mutationRatio;
+            this.randsource = randsource;
         }
 
         public double MutationRatio { get; private set; }
@@ -35,7 +36,7 @@ namespace Ast
             {
                 MutationCount++;
 
-                mutatedNode = RandomNodeSource.GetRandomNode(MutationRatio);
+                mutatedNode = RandomNodeSource.GetRandomNode(MutationRatio, randsource);
                 return true;
             }
             mutatedNode = originalNode;

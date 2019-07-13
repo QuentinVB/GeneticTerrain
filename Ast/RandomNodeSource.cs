@@ -9,16 +9,15 @@ namespace Ast
     internal class RandomNodeSource
     {
 
-        public static Node GetRandomNode(double MutationRatio)
+        public static Node GetRandomNode(double MutationRatio, Random randsource)
         {
-            Random randsource = new Random();
 
             double localeMutation = MutationRatio * 0.5 < 0.1 ? 0 : MutationRatio * 0.5;
             switch (randsource.Next(0, 5))
             {
                 case 0: //Mutate as BinaryNode
                     return new BinaryNode(
-                        GetRandomOperationToken(),
+                        GetRandomOperationToken(randsource),
                         MutateLocaly(localeMutation),
                         MutateLocaly(localeMutation));
 
@@ -37,20 +36,18 @@ namespace Ast
                 case 4: //Mutate as UnaryNode
                     return new UnaryNode(TokenType.Minus, MutateLocaly(localeMutation));
                 default:
-                    return GetRandomLeaf();
+                    return GetRandomLeaf(randsource);
             }
             Node MutateLocaly(double localeMutationRatio)
             {
-                return randsource.NextDouble() < localeMutationRatio ? GetRandomNode(localeMutationRatio) : GetRandomLeaf();
+                return randsource.NextDouble() < localeMutationRatio ? GetRandomNode(localeMutationRatio, randsource) : GetRandomLeaf(randsource);
             }
         }
         /// <summary>
         /// Provide a binary operation token randomly
         /// </summary>
-        internal static TokenType GetRandomOperationToken()
+        internal static TokenType GetRandomOperationToken(Random randsource)
         {
-            Random randsource = new Random();
-
             switch (randsource.Next(0, 3))
             {
                 case 0: return TokenType.Plus;
@@ -63,10 +60,8 @@ namespace Ast
         /// <summary>
         /// Provide a leaf (constant or identifier) randomly
         /// </summary>
-        internal static Node GetRandomLeaf()
+        internal static Node GetRandomLeaf(Random randsource)
         {
-            Random randsource = new Random();
-
             //generate Constant
             if (randsource.NextDouble() < 0.5)
             {

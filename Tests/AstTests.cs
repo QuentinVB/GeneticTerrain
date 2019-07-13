@@ -9,6 +9,7 @@ namespace Tests
     public class AstTests
     {
         Node fakeNode;
+        Random randomsource = new Random();
 
         [SetUp]
         public void Setup()
@@ -78,8 +79,8 @@ namespace Tests
             //arrange
             AstWrapper sut = new AstWrapper();
             //act
-            var n1 = sut.GetRandomGraph();
-            var n2 = sut.GetRandomGraph();
+            var n1 = sut.GetRandomGraph(randomsource);
+            var n2 = sut.GetRandomGraph(randomsource);
             //assert
             sut.Print(n1).Should().NotBe(sut.Print(n2));
         }
@@ -95,8 +96,8 @@ namespace Tests
             //act
             for (int i = 0; i < population; i++)
             {
-                var n1 = sut.GetRandomGraph();
-                var n2 = sut.GetRandomGraph();
+                var n1 = sut.GetRandomGraph(randomsource);
+                var n2 = sut.GetRandomGraph(randomsource);
                 //assert
                 if (sut.Print(n1) == sut.Print(n2)) equalCounter++;
                 n1 = null;

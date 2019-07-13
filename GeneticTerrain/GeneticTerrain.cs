@@ -28,7 +28,7 @@ namespace GeneticTerrain
         private AstWrapper _wrapper;
         private Logger logger;
 
-        Random random;
+        Random randomsource;
 
         /// <summary>
         /// Allow to generate an algorithm that match the Reality
@@ -48,7 +48,7 @@ namespace GeneticTerrain
             this._incubator = new BestKeeper<Algorithm>(1);
 
             _wrapper = new AstWrapper();
-            random = new Random();
+            randomsource = new Random();
         }
 
         /// <summary> OK
@@ -123,7 +123,7 @@ namespace GeneticTerrain
             {
                 for (int i = 0; i <= (int)Math.Ceiling((double)(maxPopulation / survivors.Count)); i++)
                 {                   
-                    int index = random.Next(survivors.Count);
+                    int index = randomsource.Next(survivors.Count);
                     AlgorithmCouples.Add((individual, survivors[index]));
                     if (AlgorithmCouples.Count == maxPopulation) return AlgorithmCouples;
                 }
@@ -148,7 +148,7 @@ namespace GeneticTerrain
         /// </summary>
         /// <param name="population">The population.</param>
         /// <param name="mutationChance">The mutation chance.</param>
-        private void Mutation(List<Algorithm> population, double mutationChance)
+        private string Mutation(List<Algorithm> population, double mutationChance)
         /*a visitor who travel the tree 
         * 20% chance to mutate a node
         * the node will be substituate with another node chosed randomly among the 5 potential nodes
@@ -161,13 +161,14 @@ namespace GeneticTerrain
             foreach (Algorithm candidate in population)
             {
                 
-                candidate.RootNode = _wrapper.MutateGraph(candidate.RootNode, mutationChance, out int mutationCount);
+                candidate.RootNode = _wrapper.MutateGraph(candidate.RootNode, mutationChance, randomsource, out int mutationCount);
 
                 candidate.RootNode = _wrapper.OptimizeGraph(candidate.RootNode);
 
                 mutationSum += mutationCount / candidate.NodeCount;
             }
-            logger.Log($" {Math.Round( mutationSum/population.Count *100.0,2)}% of mutations on {population.Count} elements");
+
+            return $" {Math.Round( mutationSum/population.Count *100.0,2)}% of mutations on {population.Count} elements";
         }
 
 
@@ -197,20 +198,18 @@ namespace GeneticTerrain
 
             for (int i = 0; i < maxPopulation; i++)
             {
-                var tree = _wrapper.GetRandomGraph();
+                var tree = _wrapper.GetRandomGraph(randomsource);
                 _population.Add(new Algorithm(tree));
             }
 
             do
             {
-                logger.Log($"Generation {generation}");
-
                 //Natural selection
                 NaturalSelection(_population, generation);
 
                 //Making couple
                 List<(Algorithm, Algorithm)> couples = Meetic(_incubator.ToList());
-                logger.Log($"couples {couples.Count}");
+                //logger.Log($"couples {couples.Count}");
 
                 //Since we didnt make babies yet, the previous generation population must not be destroyed !
                 _population.Clear();
@@ -218,10 +217,10 @@ namespace GeneticTerrain
                 //Making Children
                 BreedChildren(couples);
 
-                logger.Log($"pop {_population.Count}");
+                //logger.Log($"pop {_population.Count}");
 
-                // Mutate the children
-                Mutation(_population, mutationChance);   
+                // Mutate the children and log
+                logger.Log($"Generation {generation} " + Mutation(_population, mutationChance));
 
                 generation++;
             } while (generation < maxGeneration);

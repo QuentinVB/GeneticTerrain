@@ -20,9 +20,9 @@ namespace Runner
             GeneticParameters options = new GeneticParameters()
             {
                 MaxPopulation = 200,
-                MaxGeneration = 30,
-                MutationChance = 0.3,
-                StartAcceptanceRatio = 0.6
+                MaxGeneration = 100,
+                MutationChance = 0.7,
+                StartAcceptanceRatio = 0.2
             };
             /*{
                 maxPopulation = 200,
