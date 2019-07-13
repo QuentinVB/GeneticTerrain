@@ -107,5 +107,13 @@ namespace Ast
             return optimizationVisitor.VisitNode(n);
         }
 
+        /// <summary>
+        /// Get a randomized graph
+        /// </summary>
+        /// <returns>The root node of the randomized graph</returns>
+        public Node GetRandomGraph()
+        {
+            return RandomNodeSource.GetRandomNode(1.0);
+        }
     }
 }

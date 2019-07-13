@@ -113,21 +113,22 @@ namespace GeneticTerrain
         /// each algorithm choose randomly another algorithm to mate with
         /// ,it loop until number of couple is back to the max population
         /// </summary>
-        /// <param name="p"></param>
+        /// <param name="survivors"></param>
         /// <returns></returns>
-        public List<(Algorithm, Algorithm)> Meetic(List<Algorithm> p)
+        public List<(Algorithm, Algorithm)> Meetic(List<Algorithm> survivors)
         {
             var AlgorithmCouples = new List<(Algorithm, Algorithm)>();
             
-            foreach (var elmt in p)
+            foreach (Algorithm individual in survivors)
             {
-                for (int i = 0; i <= p.Count *2 ; i++)
-                {
-                    int index = random.Next(p.Count);
-                    AlgorithmCouples.Add((elmt, p[index]));
+                for (int i = 0; i <= (int)Math.Ceiling((double)(maxPopulation / survivors.Count)); i++)
+                {                   
+                    int index = random.Next(survivors.Count);
+                    AlgorithmCouples.Add((individual, survivors[index]));
                     if (AlgorithmCouples.Count == maxPopulation) return AlgorithmCouples;
                 }
             }
+
             return AlgorithmCouples;
         }
 
@@ -180,16 +181,24 @@ namespace GeneticTerrain
             //string[] lines = File.ReadAllLines(@"../../../init_pop.txt", Encoding.UTF8);
             //string[] t = lines[0].Split(',');
 
+            //Deprecated
+            /*
             string line = _string_graph.CreateRandomPopulation(maxPopulation);
             string[] t = line.Split(',');
-
             foreach (string parsedEquation in t)
             {
                 /*
                  throw exception : if : another identifier than x or y
-                 */
-                //if(parsedEquation.Contains()|| ) throw new ArgumentException("The identifier doesn't exist")
-                _population.Add(new Algorithm(_wrapper.Parse(parsedEquation)));
+                 
+            //if(parsedEquation.Contains()|| ) throw new ArgumentException("The identifier doesn't exist")
+            _population.Add(new Algorithm(_wrapper.Parse(parsedEquation)));
+                }
+            */
+
+            for (int i = 0; i < maxPopulation; i++)
+            {
+                var tree = _wrapper.GetRandomGraph();
+                _population.Add(new Algorithm(tree));
             }
 
             do
@@ -198,7 +207,6 @@ namespace GeneticTerrain
 
                 //Natural selection
                 NaturalSelection(_population, generation);
-
 
                 //Making couple
                 List<(Algorithm, Algorithm)> couples = Meetic(_incubator.ToList());
