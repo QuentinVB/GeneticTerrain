@@ -68,6 +68,7 @@
     <Compile Include="Nodes\WhileNode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RandomNodeSource.cs" />
     <Compile Include="Tokenizer\ExprCalculator.cs" />
     <Compile Include="Tokenizer\StringTokenizer.cs" />
     <Compile Include="Tokenizer\TokenType.cs" />

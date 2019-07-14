@@ -28,7 +28,7 @@ namespace GeneticTerrain
         private AstWrapper _wrapper;
         private Logger logger;
 
-        Random random;
+        Random randomsource;
 
         /// <summary>
         /// Allow to generate an algorithm that match the Reality
@@ -48,7 +48,7 @@ namespace GeneticTerrain
             this._incubator = new BestKeeper<Algorithm>(1);
 
             _wrapper = new AstWrapper();
-            random = new Random();
+            randomsource = new Random();
         }
 
         /// <summary> OK
@@ -113,22 +113,34 @@ namespace GeneticTerrain
         /// each algorithm choose randomly another algorithm to mate with
         /// ,it loop until number of couple is back to the max population
         /// </summary>
-        /// <param name="p"></param>
+        /// <param name="survivors"></param>
         /// <returns></returns>
-        public List<(Algorithm, Algorithm)> Meetic(List<Algorithm> p)
+        public List<(Algorithm, Algorithm)> Meetic(List<Algorithm> survivors)
         {
             var AlgorithmCouples = new List<(Algorithm, Algorithm)>();
             
-            foreach (var elmt in p)
+            foreach (Algorithm individual in survivors)
             {
-                for (int i = 0; i <= p.Count; i++)
-                {
-                    int index = random.Next(p.Count);
-                    AlgorithmCouples.Add((elmt, p[index]));
+                for (int i = 0; i <= (int)Math.Ceiling((double)(maxPopulation / survivors.Count)); i++)
+                {                   
+                    int index = randomsource.Next(survivors.Count);
+                    AlgorithmCouples.Add((individual, survivors[index]));
                     if (AlgorithmCouples.Count == maxPopulation) return AlgorithmCouples;
                 }
             }
+
             return AlgorithmCouples;
+        }
+
+        private void BreedChildren(List<(Algorithm, Algorithm)> couples)
+        {
+            foreach ((Algorithm, Algorithm) couple in couples)
+            {
+                Node child = ChildrenGenerator.Breed(couple.Item1.RootNode, couple.Item2.RootNode);
+                _population.Add(new Algorithm(child));
+                if (_population.Count >= maxPopulation) break;
+                
+            }
         }
 
         /// <summary>
@@ -136,7 +148,7 @@ namespace GeneticTerrain
         /// </summary>
         /// <param name="population">The population.</param>
         /// <param name="mutationChance">The mutation chance.</param>
-        private void Mutation(List<Algorithm> population, double mutationChance)
+        private string Mutation(List<Algorithm> population, double mutationChance)
         /*a visitor who travel the tree 
         * 20% chance to mutate a node
         * the node will be substituate with another node chosed randomly among the 5 potential nodes
@@ -149,13 +161,14 @@ namespace GeneticTerrain
             foreach (Algorithm candidate in population)
             {
                 
-                candidate.RootNode = _wrapper.MutateGraph(candidate.RootNode, mutationChance, out int mutationCount);
+                candidate.RootNode = _wrapper.MutateGraph(candidate.RootNode, mutationChance, randomsource, out int mutationCount);
 
                 candidate.RootNode = _wrapper.OptimizeGraph(candidate.RootNode);
 
                 mutationSum += mutationCount / candidate.NodeCount;
             }
-            logger.Log($" {Math.Round( mutationSum/population.Count *100.0,2)}% of mutations on {population.Count} elements");
+
+            return $" {Math.Round( mutationSum/population.Count *100.0,2)}% of mutations on {population.Count} elements";
         }
 
 
@@ -169,29 +182,34 @@ namespace GeneticTerrain
             //string[] lines = File.ReadAllLines(@"../../../init_pop.txt", Encoding.UTF8);
             //string[] t = lines[0].Split(',');
 
+            //Deprecated
+            /*
             string line = _string_graph.CreateRandomPopulation(maxPopulation);
             string[] t = line.Split(',');
-
             foreach (string parsedEquation in t)
             {
                 /*
                  throw exception : if : another identifier than x or y
-                 */
-                //if(parsedEquation.Contains()|| ) throw new ArgumentException("The identifier doesn't exist")
-                _population.Add(new Algorithm(_wrapper.Parse(parsedEquation)));
+                 
+            //if(parsedEquation.Contains()|| ) throw new ArgumentException("The identifier doesn't exist")
+            _population.Add(new Algorithm(_wrapper.Parse(parsedEquation)));
+                }
+            */
+
+            for (int i = 0; i < maxPopulation; i++)
+            {
+                var tree = _wrapper.GetRandomGraph(randomsource);
+                _population.Add(new Algorithm(tree));
             }
 
             do
             {
-                logger.Log($"Generation {generation}");
-
                 //Natural selection
                 NaturalSelection(_population, generation);
 
-
                 //Making couple
                 List<(Algorithm, Algorithm)> couples = Meetic(_incubator.ToList());
-                logger.Log($"couples {couples.Count}");
+                //logger.Log($"couples {couples.Count}");
 
                 //Since we didnt make babies yet, the previous generation population must not be destroyed !
                 _population.Clear();
@@ -199,10 +217,10 @@ namespace GeneticTerrain
                 //Making Children
                 BreedChildren(couples);
 
-                logger.Log($"pop {_population.Count}");
+                //logger.Log($"pop {_population.Count}");
 
-                // Mutate the children
-                Mutation(_population, mutationChance);   
+                // Mutate the children and log
+                logger.Log($"Generation {generation} " + Mutation(_population, mutationChance));
 
                 generation++;
             } while (generation < maxGeneration);
@@ -214,22 +232,6 @@ namespace GeneticTerrain
             return _incubator.RemoveMax();
         }
 
-        private void BreedChildren(List<(Algorithm, Algorithm)> couples)
-        {
-            var enumerator = couples.GetEnumerator();
-            while (_population.Count < maxPopulation)
-            {
-                if (enumerator.MoveNext())
-                {
-                    var couple = enumerator.Current;
-                    Node child = ChildrenGenerator.Breed(couple.Item1.RootNode, couple.Item2.RootNode);
-                    _population.Add(new Algorithm(child));
-                }
-                else
-                {
-                    enumerator = couples.GetEnumerator();
-                }
-            }
-        }
+        
     }
 }

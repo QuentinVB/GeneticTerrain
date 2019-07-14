@@ -41,7 +41,7 @@ namespace Tests
         public void naturalselection_startup(int generation, int maxPopulation, double startAcceptanceRatio)
         {
             //arrange
-            int incubatorSize = (int)Math.Ceiling((1 / generation) * maxPopulation * startAcceptanceRatio);
+            int incubatorSize = Convert.ToInt32(1.0 / generation * maxPopulation * startAcceptanceRatio);
             var sut = new GeneticTerrainGenerator(new GeneticParameters() {MaxPopulation= maxPopulation, StartAcceptanceRatio= startAcceptanceRatio });
             
             //act 

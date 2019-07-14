@@ -9,6 +9,7 @@ namespace Tests
     public class AstTests
     {
         Node fakeNode;
+        Random randomsource = new Random();
 
         [SetUp]
         public void Setup()
@@ -70,6 +71,40 @@ namespace Tests
             //assert
             sut.Invoking(a => a.Compute(n, x, y))
                .Should().Throw<ArgumentException>();
+        }
+
+        [Test]
+        public void Ast_getRandom_tree()
+        {
+            //arrange
+            AstWrapper sut = new AstWrapper();
+            //act
+            var n1 = sut.GetRandomGraph(randomsource);
+            var n2 = sut.GetRandomGraph(randomsource);
+            //assert
+            sut.Print(n1).Should().NotBe(sut.Print(n2));
+        }
+
+        [Test]
+        public void Ast_getRandom_tree_stress()
+        {
+            //arrange
+            AstWrapper sut = new AstWrapper();
+
+            int population = 1000;
+            int equalCounter = 0;
+            //act
+            for (int i = 0; i < population; i++)
+            {
+                var n1 = sut.GetRandomGraph(randomsource);
+                var n2 = sut.GetRandomGraph(randomsource);
+                //assert
+                if (sut.Print(n1) == sut.Print(n2)) equalCounter++;
+                n1 = null;
+                n2 = null;
+            }
+            ((double)(equalCounter / population)).Should().BeLessOrEqualTo(0.1);
+            Console.WriteLine((double)(equalCounter / population));   
         }
     }
 }
