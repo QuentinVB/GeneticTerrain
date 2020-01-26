@@ -144,18 +144,16 @@ namespace GeneticTerrain
         }
 
         /// <summary>
-        /// Mutation
+        /// a visitor who travel the tree 
+        /// 20% chance to mutate a node
+        /// the node will be substituate with another node chosed randomly among the 5 potential nodes
+        ///  a binary node have to choose randomly between the 4 operation
+        ///  then fill the leaf with a constant node OR a identifier
+        ///  the constant node will be a random number
         /// </summary>
         /// <param name="population">The population.</param>
         /// <param name="mutationChance">The mutation chance.</param>
         private string Mutation(List<Algorithm> population, double mutationChance)
-        /*a visitor who travel the tree 
-        * 20% chance to mutate a node
-        * the node will be substituate with another node chosed randomly among the 5 potential nodes
-        * a binary node have to choose randomly between the 4 operation
-        * then fill the leaf with a constant node OR a identifier
-        * the constant node will be a random number
-        */
         {
             double mutationSum = 0;
             foreach (Algorithm candidate in population)
